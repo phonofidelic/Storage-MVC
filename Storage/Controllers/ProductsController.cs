@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Storage.Data;
 using Storage.Models;
+using Storage.Models.ViewModels;
 
 namespace Storage.Controllers
 {
@@ -22,7 +23,17 @@ namespace Storage.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Product.ToListAsync());
+            var model = _context.Product.Select(product => new ProductIndexViewModel{
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                OrderDate = product.OrderDate,
+                Category = product.Category,
+                Shelf = product.Shelf,
+                Count = product.Count,
+                Description = product.Description
+            });
+            return View(await model.ToListAsync());
         }
 
         // GET: Products/Details/5

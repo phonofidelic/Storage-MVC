@@ -1,4 +1,6 @@
-﻿namespace Storage.Models
+﻿using Storage.Models.ViewModels;
+
+namespace Storage.Models
 {
     public class MockProductRepository : IProductRepository
     {
@@ -40,6 +42,16 @@
         public Product? GetProductById(int? productId)
         {
             return AllProducts.FirstOrDefault(p => p.Id == productId);
+        }
+        public IEnumerable<ProductViewModel> GetSummary()
+        {
+            return AllProducts.Select(product => new ProductViewModel()
+            {
+                Name = product.Name,
+                Price = product.Price,
+                Count = product.Count,
+                InventoryValue = product.Price * product.Count
+            });
         }
     }
 }

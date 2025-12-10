@@ -151,6 +151,12 @@ namespace Storage.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Products/Summary
+        public async Task<IActionResult> Summary()
+        {
+            return View(_productRepository.GetSummary());
+        }
+
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.Id == id);

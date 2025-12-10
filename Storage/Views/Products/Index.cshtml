@@ -6,9 +6,24 @@
 
 <h1>Products</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="d-flex w-100 align-items-center">
+        <p class="m-0">
+            <a asp-action="Create">Create New</a>
+        </p>
+    <div class="p-2 ">
+        <form asp-action="Filter" class="d-flex px-2">
+            <label class="form-label visually-hidden" for="category-filter">Filter:</label>
+            <input class="form-control me-2" id="category-filter" type="text" name="category" value="@ViewBag.CurrentFilter" placeholder="Filter by category" />
+            <button class="btn btn-secondary btn" type="submit">Apply</button>
+        </form>
+    </div>
+    @if (ViewBag.CurrentFilter != null)
+    {
+        <p class="m-0">
+            <a asp-action="Index">Clear filter</a>
+        </p>
+    }
+</div>
 <table class="table">
     <thead>
         <tr>

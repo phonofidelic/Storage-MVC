@@ -39,6 +39,14 @@ namespace Storage.Models
                 }
             };
 
+        public IEnumerable<Product> FilterProducts(string? category)
+        {
+            if (category == null) 
+                return AllProducts;
+
+            return AllProducts.Where(product => product.Category.Contains(category,StringComparison.OrdinalIgnoreCase));
+        }
+
         public Product? GetProductById(int? productId)
         {
             return AllProducts.FirstOrDefault(p => p.Id == productId);

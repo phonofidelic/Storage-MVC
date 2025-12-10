@@ -151,6 +151,13 @@ namespace Storage.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Products/Filter
+        public async Task<IActionResult> Filter(string category)
+        {
+            ViewBag.CurrentFilter = category;
+            return View(nameof(Index), _productRepository.FilterProducts(category));
+        }
+
         // GET: Products/Summary
         public async Task<IActionResult> Summary()
         {

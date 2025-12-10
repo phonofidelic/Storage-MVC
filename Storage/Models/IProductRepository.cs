@@ -7,6 +7,7 @@ namespace Storage.Models
     {
         IEnumerable<Product> AllProducts { get; }
         Product? GetProductById(int? productId);
+        IEnumerable<Product> FilterProducts(string? category);
         IEnumerable<ProductViewModel> GetSummary();
     }
 }

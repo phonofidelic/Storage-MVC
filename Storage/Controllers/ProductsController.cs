@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Storage.Data;
 using Storage.Models;
-using Storage.Models.ViewModels;
 
 namespace Storage.Controllers
 {

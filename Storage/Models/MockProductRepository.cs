@@ -1,12 +1,9 @@
-﻿
-using Storage.Models.ViewModels;
-
-namespace Storage.Models
+﻿namespace Storage.Models
 {
     public class MockProductRepository : IProductRepository
     {
-        public IEnumerable<ProductIndexViewModel> AllProducts =>
-            new List<ProductIndexViewModel>
+        public IEnumerable<Product> AllProducts =>
+            new List<Product>
             {
                 new() {
                     Id= 1,
@@ -40,7 +37,7 @@ namespace Storage.Models
                 }
             };
 
-        public ProductIndexViewModel? GetProductById(int? productId)
+        public Product? GetProductById(int? productId)
         {
             return AllProducts.FirstOrDefault(p => p.Id == productId);
         }

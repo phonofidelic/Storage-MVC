@@ -14,26 +14,18 @@ namespace Storage.Controllers
     public class ProductsController : Controller
     {
         private readonly StorageContext _context;
+        private readonly IProductRepository _productRepository;
 
-        public ProductsController(StorageContext context)
+        public ProductsController(StorageContext context, IProductRepository productRepository)
         {
             _context = context;
+            _productRepository = productRepository;
         }
 
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var model = _context.Product.Select(product => new ProductIndexViewModel{
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price,
-                OrderDate = product.OrderDate,
-                Category = product.Category,
-                Shelf = product.Shelf,
-                Count = product.Count,
-                Description = product.Description
-            });
-            return View(await model.ToListAsync());
+            return View(_productRepository.AllProducts);
         }
 
         // GET: Products/Details/5
@@ -44,8 +36,8 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var product = _productRepository.GetProductById(id);
+
             if (product == null)
             {
                 return NotFound();

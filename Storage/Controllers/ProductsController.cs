@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Storage.Data;
 using Storage.Models;
+using Storage.Models.ViewModels;
 
 namespace Storage.Controllers
 {
@@ -14,11 +15,16 @@ namespace Storage.Controllers
     {
         private readonly StorageContext _context;
         private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public ProductsController(StorageContext context, IProductRepository productRepository)
+        public ProductsController(
+            StorageContext context, 
+            IProductRepository productRepository,
+            ICategoryRepository categoryRepository)
         {
             _context = context;
             _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
         }
 
         // GET: Products
@@ -80,7 +86,23 @@ namespace Storage.Controllers
             {
                 return NotFound();
             }
-            return View(product);
+
+            var categories = _categoryRepository.AllCategories;
+            ProductEditViewModel viewModel = new()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                OrderDate = product.OrderDate,
+                CategoryId = product.CategoryId,
+                Category = product.Category,
+                Shelf = product.Shelf,
+                Count = product.Count,
+                Description = product.Description,
+                Categories = categories
+            };
+
+            return View(viewModel);
         }
 
         // POST: Products/Edit/5

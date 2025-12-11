@@ -1,43 +1,30 @@
 ﻿using Storage.Models.ViewModels;
+using Bogus;
 
 namespace Storage.Models
 {
     public class MockProductRepository : IProductRepository
     {
-        public IEnumerable<Product> AllProducts =>
-            new List<Product>
-            {
-                new() {
-                    Id= 1,
-                    Name = "Test 1",
-                    Price = 100,
-                    OrderDate = DateTime.Now,
-                    Category = "Category 1",
-                    Shelf = "Shelf A",
-                    Count = 10,
-                    Description = "Description for Test 1"
-                },
-                new() {
-                    Id= 2,
-                    Name = "Test 2",
-                    Price = 200,
-                    OrderDate = DateTime.Now,
-                    Category = "Category 2",
-                    Shelf = "Shelf B",
-                    Count = 20,
-                    Description = "Description for Test 2"
-                },
-                new() {
-                    Id= 3,
-                    Name = "Test 3",
-                    Price = 300,
-                    OrderDate = DateTime.Now,
-                    Category = "Category 3",
-                    Shelf = "Shelf C",
-                    Count = 30,
-                    Description = "Description for Test 3"
-                }
-            };
+        private IEnumerable<Product> _mockProducts;
+        public MockProductRepository()
+        {   
+            Randomizer.Seed = new Random(55432);
+            int productId = 0;
+            
+            var mockProducts = new Faker<Product>()
+            .StrictMode(true)
+            .RuleFor(p => p.Id, f => productId++)
+            .RuleFor(p => p.Name, f => f.Commerce.Product())
+            .RuleFor(p => p.Price, f => f.Random.Number(10, 500))
+            .RuleFor(p => p.OrderDate, f => f.Date.Recent())
+            .RuleFor(p => p.Shelf, f => $"{f.Random.String(1, 'A', 'Z')}-{f.Random.Int(1, 99)}")
+            .RuleFor(p => p.Category, f => f.PickRandom(f.Commerce.Categories(5)))
+            .RuleFor(p => p.Count, f => f.Random.Number(0, 1000))
+            .RuleFor(p => p.Description, f => f.Commerce.ProductName());
+
+            _mockProducts = mockProducts.Generate(50).ToHashSet().DistinctBy(p => p.Name);
+        }
+        public IEnumerable<Product> AllProducts => _mockProducts;
 
         public IEnumerable<Product> FilterProducts(string? category)
         {

@@ -152,7 +152,7 @@ namespace Storage.Controllers
         }
 
         // GET: Products/Filter
-        public async Task<IActionResult> Filter(string category)
+        public async Task<IActionResult> Filter([Bind("Category")] string category)
         {
             ViewBag.CurrentFilter = category;
             return View(nameof(Index), _productRepository.FilterProducts(category));

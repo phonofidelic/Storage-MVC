@@ -6,6 +6,7 @@ namespace Storage.Models
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
+        [DataType(DataType.Currency)]
         public int Price { get; set; }
 
         [Display(Name = "Order Date")]

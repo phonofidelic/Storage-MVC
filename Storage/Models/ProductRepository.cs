@@ -16,23 +16,32 @@ namespace Storage.Models
         {
             get
             {
-                return _storageDbContext.Product.ToList();
+                return _storageDbContext.Product.Include(p => p.Category);
             }
         }
 
-        public IEnumerable<Product> FilterProducts(string? category)
+        public IEnumerable<Product> FilterProducts(string? categoryName)
         {
-            throw new NotImplementedException();
+            if (categoryName == null)
+                return AllProducts;
+
+            return AllProducts.Where(p => p.Category.Name == categoryName);
         }
 
         public Product? GetProductById(int? productId)
         {
-            throw new NotImplementedException();
+            return AllProducts.FirstOrDefault(p => p.Id == productId);
         }
 
         public IEnumerable<ProductViewModel> GetSummary()
         {
-            throw new NotImplementedException();
+            return AllProducts.Select(p => new ProductViewModel()
+            {
+                Name = p.Name,
+                Price = p.Price,
+                Count = p.Count,
+                InventoryValue = p.Price * p.Count
+            });
         }
     }
 }

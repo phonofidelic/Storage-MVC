@@ -13,7 +13,7 @@ namespace Storage.Migrations
 {
     [DbContext(typeof(StorageContext))]
     [Migration("20251211133156_add-category")]
-    partial class addcategory
+    partial class AddCategoryMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

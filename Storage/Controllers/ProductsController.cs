@@ -81,7 +81,7 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product.FindAsync(id);
+            var product = _productRepository.GetProductById(id);
             if (product == null)
             {
                 return NotFound();

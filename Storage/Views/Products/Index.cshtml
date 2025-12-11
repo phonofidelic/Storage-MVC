@@ -4,7 +4,7 @@
     ViewData["Title"] = "Products";
 }
 
-<h1>Products</h1>
+<h1>Products (@Model.Count())</h1>
 
 <div class="d-flex w-100 align-items-center">
         <p class="m-0">
@@ -64,7 +64,7 @@
                 @Html.DisplayFor(modelItem => item.OrderDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Category)
+                @Html.DisplayFor(modelItem => item.Category.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Shelf)

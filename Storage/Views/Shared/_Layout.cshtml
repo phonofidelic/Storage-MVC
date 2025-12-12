@@ -12,9 +12,10 @@
     <script src="~/js/color-theme-picker.js">-</script>
 </head>
 
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-body-primary border-bottom box-shadow mb-3">
+<body class="vh-100 vw-100 position-relative bottom-0" style="">
+
+    <div class="position-sticky top-0 bg-body z-1 left-0 right-0">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Storage</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
@@ -73,14 +74,12 @@
                 </div>
             </div>
         </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
     </div>
+    <main role="main" class="ps-3 h-100 d-flex flex-column pe-0">
+        @RenderBody()
+    </main>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted bg-body position-sticky bottom-0 z-1">
         <div class="container">
             &copy; 2025 - Storage - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

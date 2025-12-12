@@ -30,10 +30,10 @@
     </div>
 </header>
 
-<div class="h-100 position-relative d-flex flex-column pe-3" style="width; 100vw;">
-    <table class="table table-hover position-relative vw-100 overflow-x-scroll"
-        style="margin-top: 127px; max-width: 100vw;">
-        <thead class="bg-body z-0 w-100 position-sticky border-bottom left-0 right-0 shadow-sm" style="top: 127px;">
+<div class="h-100 position-relative d-flex flex-column pe-3" style="width: 100vw;">
+    <table class="table mb-0 table-hover position-relative vw-100 overflow-x-scroll"
+        style="margin-top: 40px; max-width: 100vw;">
+        <thead class="bg-body z-0 w-100 position-sticky border-bottom left-0 right-0 shadow-sm" style="top: 126px;">
             <tr class="w-100 h-100">
                 <th class=" text-nowrap">
                     @Html.DisplayNameFor(model => model.Name)
@@ -59,7 +59,7 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody class="pb-4">
+        <tbody>
             @foreach (var item in Model)
             {
                 <tr>

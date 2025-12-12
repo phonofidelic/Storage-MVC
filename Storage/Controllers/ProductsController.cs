@@ -16,7 +16,7 @@ namespace Storage.Controllers
         private readonly StorageContext _context;
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
-        private ILogger<ProductsController> _logger;
+        private readonly ILogger<ProductsController> _logger;
 
         public ProductsController(
             StorageContext context, 
@@ -33,7 +33,6 @@ namespace Storage.Controllers
         // GET: Products?filter=1&filter=2
         public async Task<IActionResult> Index([FromQuery] IEnumerable<int>? filter)
         {
-            _logger.LogInformation("filter: {Filter}", filter);
             var filterdProductsList = _productRepository.FilterProducts(filter).ToList();
 
             AllProductsViewModel viewModel = new()

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Storage.Data;
 using Storage.Models.ViewModels;
 
@@ -20,12 +21,13 @@ namespace Storage.Models
             }
         }
 
-        public IEnumerable<Product> FilterProducts(string? categoryName)
+        public IEnumerable<Product> FilterProducts(IEnumerable<int>? categoryIds)
         {
-            if (categoryName == null)
+            if (categoryIds == null || categoryIds.IsNullOrEmpty())
                 return AllProducts;
 
-            return AllProducts.Where(p => p.Category.Name == categoryName);
+
+            return AllProducts.Where(p => categoryIds.Contains(p.CategoryId));
         }
 
         public Product? GetProductById(int? productId)

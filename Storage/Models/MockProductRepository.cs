@@ -1,5 +1,6 @@
 ﻿using Storage.Models.ViewModels;
 using Bogus;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Storage.Models
 {
@@ -12,12 +13,13 @@ namespace Storage.Models
         }
         public IEnumerable<Product> AllProducts => _mockProducts.ToList();
 
-        public IEnumerable<Product> FilterProducts(string? categoryName)
+        public IEnumerable<Product> FilterProducts(IEnumerable<int>? categoryIds)
         {
-            if (categoryName == null) 
+            if (categoryIds == null || categoryIds.IsNullOrEmpty())
                 return AllProducts;
 
-            return AllProducts.Where(product => product.Category.Name.Contains(categoryName, StringComparison.OrdinalIgnoreCase));
+
+            return AllProducts.Where(p => categoryIds.Contains(p.CategoryId));
         }
 
         public Product? GetProductById(int? productId)

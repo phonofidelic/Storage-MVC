@@ -9,8 +9,7 @@ builder.Services.AddDbContext<StorageContext>(options =>
 
 // Add services to the container.
 bool shouldMock = bool.Parse(builder.Configuration["MockDb"] ?? "");
-bool osSupportsDb = Environment.OSVersion.Platform.Equals(OSPlatform.Windows);
-if (osSupportsDb && !shouldMock)
+if (!shouldMock)
 {
     builder.Services.AddScoped<IProductRepository, ProductRepository>();
     builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -44,7 +43,6 @@ app.MapControllerRoute(
     pattern: "{controller=Products}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-if (osSupportsDb)
-    DbInitializer.Seed(app);
+DbInitializer.Seed(app);
 
 app.Run();

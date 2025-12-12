@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Storage.Models.Product>
+﻿@model Storage.Models.ViewModels.AllProductsViewModel
 
 @{
     ViewData["Title"] = "Products";
@@ -6,21 +6,21 @@
 
 <header class="position-fixed bg-body p-3 pb-0 d-flex w-100 align-items-center z-1 overflow-hidden left-0 right-0"
     style="top: 57px;">
-    <div class="d-flex w-100 position- left-0 bg-body z-2">
-        <h1 class="text-nowrap">Products (@Model.Count())</h1>
-        <div class="d-flex w-100 align-items-center">
-            <p class="m-0">
+    <div class="d-flex w-100 bg-body z-2">
+        <h1 class="text-nowrap">Products (@Model.Count)</h1>
+        <div class="d-flex w-100 align-items-center px-2">
+            <p class="m-0 p-2">
                 <a asp-action="Create">Create New</a>
             </p>
             <div class="p-2 ">
-                <form asp-action="Filter" class="d-flex px-2">
+                <form method="get" asp-controller="Products" asp-action="Index" class="d-flex px-2">
                     <label class="form-label visually-hidden" for="category-filter">Filter:</label>
-                    <input class="form-control me-2" id="category-filter" type="text" name="category"
-                        value="@ViewBag.CurrentFilter" placeholder="Filter by category" />
+                    <select size="1" name="filter" asp-for="Categories" asp-items="Model.Categories" class="form-select" aria-label="Category select">
+                    </select>
                     <button class="btn btn-secondary btn" type="submit">Apply</button>
                 </form>
             </div>
-            @if (ViewBag.CurrentFilter != null)
+            @if (Model.SelectedCategoryIds?.Count() > 0)
             {
                 <p class="m-0">
                     <a asp-action="Index">Clear filter</a>
@@ -36,31 +36,31 @@
         <thead class="bg-body z-0 w-100 position-sticky border-bottom left-0 right-0 shadow-sm" style="top: 126px;">
             <tr class="w-100 h-100">
                 <th class=" text-nowrap">
-                    @Html.DisplayNameFor(model => model.Name)
+                    @Html.DisplayNameFor(model => model.Product.Name)
                 </th>
                 <th class="text-nowrap">
-                    @Html.DisplayNameFor(model => model.Price)
+                    @Html.DisplayNameFor(model => model.Product.Price)
                 </th>
                 <th class="text-nowrap">
-                    @Html.DisplayNameFor(model => model.OrderDate)
+                    @Html.DisplayNameFor(model => model.Product.OrderDate)
                 </th>
                 <th class="text-nowrap">
-                    @Html.DisplayNameFor(model => model.Category)
+                    @Html.DisplayNameFor(model => model.Product.Category.Name)
                 </th>
                 <th class="text-nowrap">
-                    @Html.DisplayNameFor(model => model.Shelf)
+                    @Html.DisplayNameFor(model => model.Product.Shelf)
                 </th>
                 <th class="text-nowrap">
-                    @Html.DisplayNameFor(model => model.Count)
+                    @Html.DisplayNameFor(model => model.Product.Count)
                 </th>
                 <th class="text-nowrap">
-                    @Html.DisplayNameFor(model => model.Description)
+                    @Html.DisplayNameFor(model => model.Product.Description)
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Products)
             {
                 <tr>
                     <td class="text-truncate" style="max-width: 200px;">

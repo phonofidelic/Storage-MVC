@@ -16,21 +16,34 @@ namespace Storage.Controllers
         private readonly StorageContext _context;
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private ILogger<ProductsController> _logger;
 
         public ProductsController(
             StorageContext context, 
             IProductRepository productRepository,
-            ICategoryRepository categoryRepository)
+            ICategoryRepository categoryRepository,
+            ILogger<ProductsController> logger)
         {
             _context = context;
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
+            _logger = logger;
         }
 
-        // GET: Products
-        public async Task<IActionResult> Index()
+        // GET: Products?filter=1&filter=2
+        public async Task<IActionResult> Index(IEnumerable<int>? filter)
         {
-            return View(_productRepository.AllProducts);
+            _logger.LogInformation("filter: {Filter}", filter);
+            var filterdProductsList = _productRepository.FilterProducts(filter).ToList();
+
+            AllProductsViewModel viewModel = new()
+            {
+                Products = filterdProductsList,
+                Count = filterdProductsList.Count,
+                Categories = GetCategorySelects(_categoryRepository.AllCategories),
+                SelectedCategoryIds = filter
+            };
+            return View(viewModel);
         }
 
         // GET: Products/Details/5
@@ -173,12 +186,7 @@ namespace Storage.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Products/Filter
-        public async Task<IActionResult> Filter([Bind("Category")] string category)
-        {
-            ViewBag.CurrentFilter = category;
-            return View(nameof(Index), _productRepository.FilterProducts(category));
-        }
+        
 
         // GET: Products/Summary
         public async Task<IActionResult> Summary()
@@ -189,6 +197,15 @@ namespace Storage.Controllers
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.Id == id);
+        }
+
+        private static List<SelectListItem> GetCategorySelects(IEnumerable<Category> categories)
+        {
+            return categories.Select(c => new SelectListItem()
+            {
+                Value = c.Id.ToString(),
+                Text = c.Name
+            }).ToList();
         }
     }
 }

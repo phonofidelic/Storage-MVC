@@ -15,9 +15,9 @@
             <div class="p-2 ">
                 <form method="get" asp-controller="Products" asp-action="Index" class="d-flex px-2">
                     <label class="form-label visually-hidden" for="category-filter">Filter:</label>
-                    <select size="1" name="filter" asp-for="Categories" asp-items="Model.Categories" class="form-select" aria-label="Category select">
+                    <select size="1" name="filter" asp-for="SelectedCategoryIds" asp-items="Model.Categories" class="form-select" aria-label="Category select">
                     </select>
-                    <button class="btn btn-secondary btn" type="submit">Apply</button>
+                    <button class="btn btn-secondary btn ms-2" type="submit">Apply</button>
                 </form>
             </div>
             @if (Model.SelectedCategoryIds?.Count() > 0)

@@ -31,7 +31,7 @@ namespace Storage.Controllers
         }
 
         // GET: Products?filter=1&filter=2
-        public async Task<IActionResult> Index(IEnumerable<int>? filter)
+        public async Task<IActionResult> Index([FromQuery] IEnumerable<int>? filter)
         {
             _logger.LogInformation("filter: {Filter}", filter);
             var filterdProductsList = _productRepository.FilterProducts(filter).ToList();
@@ -40,7 +40,7 @@ namespace Storage.Controllers
             {
                 Products = filterdProductsList,
                 Count = filterdProductsList.Count,
-                Categories = GetCategorySelects(_categoryRepository.AllCategories),
+                Categories = GetCategorySelects(_categoryRepository.AllCategories, filter),
                 SelectedCategoryIds = filter
             };
             return View(viewModel);
@@ -199,12 +199,13 @@ namespace Storage.Controllers
             return _context.Product.Any(e => e.Id == id);
         }
 
-        private static List<SelectListItem> GetCategorySelects(IEnumerable<Category> categories)
+        private static List<SelectListItem> GetCategorySelects(IEnumerable<Category> categories, IEnumerable<int>? selectedIds = null)
         {
             return categories.Select(c => new SelectListItem()
             {
                 Value = c.Id.ToString(),
-                Text = c.Name
+                Text = c.Name,
+                Selected = selectedIds?.Contains(c.Id) ?? false
             }).ToList();
         }
     }

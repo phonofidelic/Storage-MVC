@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Runtime.InteropServices;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Storage.Data;
 using Storage.Models;
@@ -7,8 +8,18 @@ builder.Services.AddDbContext<StorageContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("StorageContext") ?? throw new InvalidOperationException("Connection string 'StorageContext' not found.")));
 
 // Add services to the container.
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+bool shouldMock = bool.Parse(builder.Configuration["MockDb"] ?? "");
+bool osSupportsDb = Environment.OSVersion.Platform.Equals(OSPlatform.Windows);
+if (osSupportsDb && !shouldMock)
+{
+    builder.Services.AddScoped<IProductRepository, ProductRepository>();
+    builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+} else
+{
+    builder.Services.AddScoped<IProductRepository, MockProductRepository>();
+    builder.Services.AddScoped<ICategoryRepository, MockCategoryRepository>();
+}
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -33,6 +44,7 @@ app.MapControllerRoute(
     pattern: "{controller=Products}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-DbInitializer.Seed(app);
+if (osSupportsDb)
+    DbInitializer.Seed(app);
 
 app.Run();

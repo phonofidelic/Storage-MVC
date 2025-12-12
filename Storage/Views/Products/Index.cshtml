@@ -4,38 +4,36 @@
     ViewData["Title"] = "Products";
 }
 
-<style>
-    body {
-        overflow-x: hidden;
-    }
-</style>
-
-<header class="position-sticky bg-body pt-3 d-flex w-100 align-items-center z-1" style="top: 57px; max-width 100vw;">
-    <h1 class="text-nowrap">Products (@Model.Count())</h1>
-    <div class="d-flex w-100 align-items-center">
-        <p class="m-0">
-            <a asp-action="Create">Create New</a>
-        </p>
-        <div class="p-2 ">
-            <form asp-action="Filter" class="d-flex px-2">
-                <label class="form-label visually-hidden" for="category-filter">Filter:</label>
-                <input class="form-control me-2" id="category-filter" type="text" name="category"
-                    value="@ViewBag.CurrentFilter" placeholder="Filter by category" />
-                <button class="btn btn-secondary btn" type="submit">Apply</button>
-            </form>
-        </div>
-        @if (ViewBag.CurrentFilter != null)
-        {
+<header class="position-fixed bg-body p-3 pb-0 d-flex w-100 align-items-center z-1 overflow-hidden left-0 right-0"
+    style="top: 57px;">
+    <div class="d-flex w-100 position- left-0 bg-body z-2">
+        <h1 class="text-nowrap">Products (@Model.Count())</h1>
+        <div class="d-flex w-100 align-items-center">
             <p class="m-0">
-                <a asp-action="Index">Clear filter</a>
+                <a asp-action="Create">Create New</a>
             </p>
-        }
+            <div class="p-2 ">
+                <form asp-action="Filter" class="d-flex px-2">
+                    <label class="form-label visually-hidden" for="category-filter">Filter:</label>
+                    <input class="form-control me-2" id="category-filter" type="text" name="category"
+                        value="@ViewBag.CurrentFilter" placeholder="Filter by category" />
+                    <button class="btn btn-secondary btn" type="submit">Apply</button>
+                </form>
+            </div>
+            @if (ViewBag.CurrentFilter != null)
+            {
+                <p class="m-0">
+                    <a asp-action="Index">Clear filter</a>
+                </p>
+            }
+        </div>
     </div>
 </header>
 
-<div class="h-100 position-relative  d-flex flex-column pe-3" style="overflow-x: auto; overflow-y: hidden; width-100vw">
-    <table class="table table-hover position-relative w-100" style="margin-bottom: 60px;">
-        <thead class="bg-body position-sticky border-bottom left-0 right-0 w-100 shadow" style="top: .1px;">
+<div class="h-100 position-relative d-flex flex-column pe-3" style="width; 100vw;">
+    <table class="table table-hover position-relative vw-100 overflow-x-scroll"
+        style="margin-top: 127px; max-width: 100vw;">
+        <thead class="bg-body z-0 w-100 position-sticky border-bottom left-0 right-0 shadow-sm" style="top: 127px;">
             <tr class="w-100 h-100">
                 <th class=" text-nowrap">
                     @Html.DisplayNameFor(model => model.Name)
@@ -61,7 +59,7 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody class="pb-4 overflow-x-scroll" style="max-width: 100vw;">
+        <tbody class="pb-4">
             @foreach (var item in Model)
             {
                 <tr>

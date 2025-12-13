@@ -15,7 +15,8 @@
             <div class="p-2 ">
                 <form method="get" asp-controller="Products" asp-action="Index" class="d-flex px-2">
                     <label class="form-label visually-hidden" for="category-filter">Filter:</label>
-                    <select size="1" name="filter" asp-for="SelectedCategoryIds" asp-items="Model.Categories" class="form-select" aria-label="Category select">
+                    <select size="1" name="filter" asp-for="SelectedCategoryIds" asp-items="Model.Categories"
+                        class="form-select" aria-label="Category select">
                     </select>
                     <button class="btn btn-secondary btn ms-2" type="submit">Apply</button>
                 </form>
@@ -64,7 +65,7 @@
             {
                 <tr>
                     <td class="text-truncate" style="max-width: 200px;">
-                        @Html.DisplayFor(modelItem => item.Name)
+                        <a asp-action="Edit" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
                     </td>
                     <td class="text-nowrap">
                         @Html.DisplayFor(modelItem => item.Price)
@@ -86,7 +87,6 @@
                     </td>
                     <td class="text-nowrap">
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                         <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                     </td>
                 </tr>

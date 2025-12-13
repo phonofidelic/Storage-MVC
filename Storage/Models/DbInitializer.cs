@@ -7,7 +7,27 @@ namespace Storage.Models
     {
         public static IEnumerable<Category> GenerateCategories()
         {
-            return Categories.Select(c => c.Value);
+            return Categories.Select(c => c.Value).ToArray();
+        }
+
+        public static IEnumerable<Category> GenerateCategoriesWithIds()
+        {
+            int id = 0;
+            return Categories.Select(c => {
+                var category = c.Value;
+                category.Id = id++;
+                return category;
+            });
+        }
+
+        public static IEnumerable<Product> GenerateProductsWithIds()
+        {
+            int id = 0;
+            return GenerateProducts().Select(p =>
+            {
+                p.Id = id++;
+                return p;
+            });
         }
 
         private static Dictionary<string, Category>? categories;
@@ -17,23 +37,23 @@ namespace Storage.Models
             {
                 if (categories == null)
                 {
-                    int categoryId = 0;
+                    // int categoryId = 0;
                     var genresArray = new Category[]
                     {
                         new() {
-                            Id = categoryId++,
+                            // Id = categoryId++,
                             Name = "Coffee Beans",
                             Description = "Discover our curated selection of premium coffee beans, crafted from high-quality, sustainably sourced origins. From bright and floral Nordic profiles to rich espresso blends, each roast is designed to deliver exceptional flavor in every cup. Perfect for offices, homes, and coffee lovers everywhere."
                         },
                         new()
                         {
-                            Id = categoryId++,
+                            // Id = categoryId++,
                             Name = "Coffee Machines",
                             Description = "Explore our range of modern, reliable coffee machines designed for workplaces of all sizes. From compact brewers to high-capacity systems, each machine delivers exceptional quality, intuitive controls, and a seamless coffee experience—cup after cup."
                         },
                         new()
                         {
-                            Id = categoryId++,
+                            // Id = categoryId++,
                             Name = "Events",
                             Description = "Experience coffee like never before with our interactive Coffee Party events. From corporate tastings to public pop-ups, we bring premium brews, expert guidance, and a fun, social atmosphere that connects people through great coffee."
                         }
@@ -53,11 +73,11 @@ namespace Storage.Models
         {
             Randomizer.Seed = new Random(52332);
             var faker = new Faker();
-            int productId = 0;
+            // int productId = 0;
 
             return [new Product
                     {
-                        Id = productId++,
+                        // Id = productId++,
                         Name = "AromaBrew Pro 800",
                         Price = 12175,
                         OrderDate = faker.Date.Recent(),
@@ -69,7 +89,7 @@ namespace Storage.Models
                     },
                     new()
                     {
-                        Id = productId++,
+                        // Id = productId++,
                         Name = "OfficeFlow Mini",
                         Price = 4500,
                         OrderDate = faker.Date.Recent(),
@@ -81,7 +101,7 @@ namespace Storage.Models
                     },
                     new Product
                     {
-                        Id = productId++,
+                        // Id = productId++,
                         Name = "BrewStation XL",
                         Price = 6990,
                         OrderDate = faker.Date.Recent(),
@@ -93,7 +113,7 @@ namespace Storage.Models
                     },
                     new()
                     {
-                        Id = productId++,
+                        // Id = productId++,
                         Name = "BaristaTouch One",
                         Price = 17999,
                         OrderDate = faker.Date.Recent(),
@@ -105,7 +125,7 @@ namespace Storage.Models
                     },
                     new()
                     {
-                        Id = productId++,
+                        // Id = productId++,
                         Name = "Nordic Roast - Medium",
                         Price = 249,
                         OrderDate = faker.Date.Recent(),
@@ -117,7 +137,7 @@ namespace Storage.Models
                     },
                     new()
                     {
-                        Id = productId++,
+                        // Id = productId++,
                         Name = "Midnight Espresso",
                         Price = 279,
                         OrderDate = faker.Date.Recent(),
@@ -129,7 +149,7 @@ namespace Storage.Models
                     },
                     new()
                     {
-                        Id = productId++,
+                        // Id = productId++,
                         Name = "Fika Blend - Light Roast",
                         Price = 259,
                         OrderDate = faker.Date.Recent(),
@@ -141,7 +161,7 @@ namespace Storage.Models
                     },
                     new()
                     {
-                        Id = productId++,
+                        // Id = productId++,
                         Name = "Mountain Peak Organic",
                         Price = 299,
                         OrderDate = faker.Date.Recent(),
@@ -153,7 +173,7 @@ namespace Storage.Models
                     },
                     new()
                     {
-                        Id = productId++,
+                        // Id = productId++,
                         Name = "French Roast Bold",
                         Price = 269,
                         OrderDate = faker.Date.Recent(),
@@ -165,7 +185,7 @@ namespace Storage.Models
                     },
                     new()
                     {
-                        Id = productId++,
+                        // Id = productId++,
                         Name = "Decaf Harmony",
                         Price = 259,
                         OrderDate = faker.Date.Recent(),
@@ -177,7 +197,7 @@ namespace Storage.Models
                     },
                     new()
                     {
-                        Id = productId++,
+                        // Id = productId++,
                         Name = "Ethiopian Sunrise",
                         Price = 289,
                         OrderDate = faker.Date.Recent(),
@@ -189,7 +209,7 @@ namespace Storage.Models
                     },
                     new()
                     {
-                        Id = productId++,
+                        // Id = productId++,
                         Name = "Brazilian Classic",
                         Price = 239,
                         OrderDate = faker.Date.Recent(),
@@ -201,7 +221,7 @@ namespace Storage.Models
                     },
                     new()
                     {
-                        Id = productId++,
+                        // Id = productId++,
                         Name = "Office Coffee Party Experience",
                         Price = 11999,
                         OrderDate = faker.Date.Recent(),
@@ -213,7 +233,7 @@ namespace Storage.Models
                     },
                     new()
                     {
-                        Id = productId++,
+                        // Id = productId++,
                         Name = "Coffee Party Pop-Up",
                         Price = 399,
                         OrderDate = faker.Date.Recent(),

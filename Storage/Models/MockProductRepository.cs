@@ -9,7 +9,13 @@ namespace Storage.Models
         private IEnumerable<Product> _mockProducts;
         public MockProductRepository()
         {   
-            _mockProducts = DbInitializer.GenerateProducts();;
+            _mockProducts = DbInitializer
+                .GenerateProductsWithIds()
+                .Select(p =>
+                {
+                    p.Name = "[MOCK] " + p.Name;
+                    return p;
+                });
         }
         public IEnumerable<Product> AllProducts => _mockProducts.ToList();
 

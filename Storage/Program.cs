@@ -8,16 +8,8 @@ builder.Services.AddDbContext<StorageContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("StorageContext") ?? throw new InvalidOperationException("Connection string 'StorageContext' not found.")));
 
 // Add services to the container.
-bool shouldMock = bool.Parse(builder.Configuration["MockDb"] ?? "");
-if (!shouldMock)
-{
-    builder.Services.AddScoped<IProductRepository, ProductRepository>();
-    builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-} else
-{
-    builder.Services.AddScoped<IProductRepository, MockProductRepository>();
-    builder.Services.AddScoped<ICategoryRepository, MockCategoryRepository>();
-}
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddControllersWithViews();
 

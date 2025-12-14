@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bogus.DataSets;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -66,7 +67,11 @@ namespace Storage.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            return View();
+            ProductCreateViewModel viewModel = new()
+            {
+                Categories = GetCategorySelects(_categoryRepository.AllCategories)
+            };
+            return View(viewModel);
         }
 
         // POST: Products/Create
@@ -74,12 +79,11 @@ namespace Storage.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Price,OrderDate,Category,Shelf,Count,Description")] Product product)
+        public async Task<IActionResult> Create([Bind("Name,Price,OrderDate,CategoryId,Shelf,Count,Description")] ProductCreateDto product)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
+                _productRepository.Create(product);
                 return RedirectToAction(nameof(Index));
             }
             return View(product);

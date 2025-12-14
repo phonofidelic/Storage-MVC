@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 
 namespace Storage.Models.ViewModels
 {
@@ -16,7 +17,7 @@ namespace Storage.Models.ViewModels
         public Category Category { get; set; } = default!;
         public string Shelf { get; set; } = string.Empty;
         public int Count { get; set; }
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; } = string.Empty;
         public IEnumerable<Category> Categories { get; set; } = [];
     }
 }

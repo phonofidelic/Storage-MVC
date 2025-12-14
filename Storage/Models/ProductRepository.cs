@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Storage.Data;
 using Storage.Models.ViewModels;
@@ -19,6 +20,23 @@ namespace Storage.Models
             {
                 return _storageDbContext.Product.Include(p => p.Category);
             }
+        }
+
+        public async void Create(ProductCreateDto product)
+        {
+            _storageDbContext.Add(new Product()
+            {
+                Name = product.Name,
+                Price = product.Price,
+                OrderDate = product.OrderDate,
+                CategoryId = product.CategoryId,
+                Shelf = product.Shelf,
+                Count = product.Count,
+                Description = product.Description ?? ""
+            });
+            
+        
+            _storageDbContext.SaveChanges();
         }
 
         public IEnumerable<Product> FilterProducts(IEnumerable<int>? categoryIds)

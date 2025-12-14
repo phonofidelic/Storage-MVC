@@ -6,10 +6,12 @@ namespace Storage.Models
 {
     public class MockProductRepository : IProductRepository
     {
-        private IEnumerable<Product> _mockProducts;
-        public MockProductRepository()
+        private MockDb _mockDb;
+        private Randomizer _random = new();
+        public MockProductRepository(MockDb db)
         {   
-            _mockProducts = DbInitializer
+            _mockDb = db;
+            _mockDb.Products = DbInitializer
                 .GenerateProductsWithIds()
                 .Select(p =>
                 {
@@ -17,7 +19,27 @@ namespace Storage.Models
                     return p;
                 });
         }
-        public IEnumerable<Product> AllProducts => _mockProducts.ToList();
+        public IEnumerable<Product> AllProducts => _mockDb.Products.ToList();
+
+        public void Create(ProductCreateDto product)
+        {
+            int lastId = AllProducts.Max(p => p.Id);
+            int newProductId = _random.Int(lastId);
+
+            var newList = _mockDb.Products.ToList();
+            newList.Add(new()
+            {
+                Id = newProductId,
+                Name = product.Name,
+                Price = product.Price,
+                OrderDate = product.OrderDate,
+                CategoryId = product.CategoryId,
+                Count = product.Count,
+                Description = product.Description ?? ""
+            });
+
+            _mockDb.Products = newList;
+        }
 
         public IEnumerable<Product> FilterProducts(IEnumerable<int>? categoryIds)
         {

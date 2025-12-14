@@ -4,11 +4,12 @@ namespace Storage.Models;
 
 public class MockCategoryRepository : ICategoryRepository
 {
-    private IEnumerable<Category> _mockCategories;
+    private MockDb _mockDb;
 
-    public MockCategoryRepository()
+    public MockCategoryRepository(MockDb db)
     {
-        _mockCategories = DbInitializer.GenerateCategoriesWithIds();
+        _mockDb = db;
+        _mockDb.Categories = DbInitializer.GenerateCategoriesWithIds();
     }
-    public IEnumerable<Category> AllCategories => _mockCategories;
+    public IEnumerable<Category> AllCategories => _mockDb.Categories;
 }

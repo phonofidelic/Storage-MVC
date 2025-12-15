@@ -5,7 +5,13 @@ namespace Storage.Models
     public class Product
     {
         public int Id { get; set; }
+        
+        [Required]
+        [StringLength(100)]
         public string Name { get; set; } = string.Empty;
+
+        [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "{0} must be a number between {2} and {1}")]
         [DataType(DataType.Currency)]
         public int Price { get; set; }
 
@@ -13,9 +19,13 @@ namespace Storage.Models
         [DataType(DataType.Date)]
         public DateTime OrderDate { get; set; }
         public int CategoryId { get; set; }
-        public Category Category { get; set; } = default!;
         public string Shelf { get; set; } = string.Empty;
+        
+        [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "{0} must be a number between {2} and {1}")]
         public int Count { get; set; }
-        public string Description { get; set; } = string.Empty;
+        
+        [StringLength(200)]
+        public string? Description { get; set; } = string.Empty;
     }
 }

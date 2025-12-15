@@ -6,10 +6,12 @@ namespace Storage.Models
 {
     public class MockProductRepository : IProductRepository
     {
+        private ILogger<MockCategoryRepository> _logger;
         private MockDb _mockDb;
         private Randomizer _random = new();
-        public MockProductRepository(MockDb db)
+        public MockProductRepository(MockDb db, ILogger<MockCategoryRepository> logger)
         {   
+            _logger = logger;
             _mockDb = db;
             _mockDb.Products = DbInitializer
                 .GenerateProductsWithIds()
@@ -39,6 +41,11 @@ namespace Storage.Models
             });
 
             _mockDb.Products = newList;
+        }
+
+        public void Update(int Id, Product product)
+        {
+            _logger.LogInformation("Product update info: {Update}", product);
         }
 
         public IEnumerable<Product> FilterProducts(IEnumerable<int>? categoryIds)

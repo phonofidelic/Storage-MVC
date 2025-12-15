@@ -6,6 +6,7 @@ using Bogus.DataSets;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Storage.Data;
 using Storage.Models;
 using Storage.Models.ViewModels;
@@ -34,12 +35,26 @@ namespace Storage.Controllers
         // GET: Products?filter=1&filter=2
         public async Task<IActionResult> Index([FromQuery] IEnumerable<int>? filter)
         {
-            var filterdProductsList = _productRepository.FilterProducts(filter).ToList();
+            var filteredProductsList = _productRepository
+                .FilterProducts(filter)
+                .ToList()
+                .Select(p => new ProductDetailsViewModel()
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    OrderDate = p.OrderDate,
+                    CategoryId = p.CategoryId,
+                    Category = _categoryRepository.AllCategories.First(c => c.Id == p.CategoryId),
+                    Shelf = p.Shelf,
+                    Count = p.Count,
+                    Description = p.Description
+                });
 
             AllProductsViewModel viewModel = new()
             {
-                Products = filterdProductsList,
-                Count = filterdProductsList.Count,
+                Products = filteredProductsList,
+                Count = filteredProductsList.Count(),
                 Categories = GetCategorySelects(_categoryRepository.AllCategories, filter),
                 SelectedCategoryIds = filter
             };
@@ -61,7 +76,20 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            return View(product);
+            ProductDetailsViewModel viewModel = new()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                OrderDate = product.OrderDate,
+                CategoryId = product.CategoryId,
+                Category = _categoryRepository.AllCategories.First(c => c.Id == product.CategoryId),
+                Shelf = product.Shelf,
+                Count = product.Count,
+                Description = product.Description
+            };
+
+            return View(viewModel);
         }
 
         // GET: Products/Create
@@ -106,16 +134,8 @@ namespace Storage.Controllers
             var categories = _categoryRepository.AllCategories;
             ProductEditViewModel viewModel = new()
             {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price,
-                OrderDate = product.OrderDate,
-                CategoryId = product.CategoryId,
-                Category = product.Category,
-                Shelf = product.Shelf,
-                Count = product.Count,
-                Description = product.Description,
-                Categories = categories
+                Product = product,
+                Categories = GetCategorySelects(categories, [product.CategoryId]),
             };
 
             return View(viewModel);
@@ -126,19 +146,13 @@ namespace Storage.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,OrderDate,Category,Shelf,Count,Description")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,OrderDate,CategoryId,Shelf,Count,Description")] Product product)
         {
-            if (id != product.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
+                    _productRepository.Update(id, product);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -153,7 +167,15 @@ namespace Storage.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+
+            var categories = _categoryRepository.AllCategories;
+            ProductEditViewModel viewModel = new()
+            {
+                Product = product,
+                Categories = GetCategorySelects(categories, [product.CategoryId])
+            };
+
+            return View(viewModel);
         }
 
         // GET: Products/Delete/5
@@ -199,7 +221,7 @@ namespace Storage.Controllers
 
         private bool ProductExists(int id)
         {
-            return _context.Product.Any(e => e.Id == id);
+            return _productRepository.AllProducts.Any(e => e.Id == id);
         }
 
         private static List<SelectListItem> GetCategorySelects(IEnumerable<Category> categories, IEnumerable<int>? selectedIds = null)

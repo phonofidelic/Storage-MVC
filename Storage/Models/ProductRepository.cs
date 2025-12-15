@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Storage.Data;
@@ -9,16 +10,19 @@ namespace Storage.Models
     public class ProductRepository : IProductRepository
     {
         private readonly StorageContext _storageDbContext;
+        private readonly ILogger<ProductRepository> _logger;
 
-        public ProductRepository(StorageContext storageDbContext)
+        public ProductRepository(StorageContext storageDbContext, ILogger<ProductRepository> logger)
         {
             _storageDbContext = storageDbContext;
+            _logger = logger;
         }
         public IEnumerable<Product> AllProducts
         {
             get
             {
-                return _storageDbContext.Product.Include(p => p.Category);
+                // return _storageDbContext.Product.Include(p => p.Category);
+                return _storageDbContext.Product.ToList();
             }
         }
 
@@ -36,6 +40,17 @@ namespace Storage.Models
             });
             
         
+            _storageDbContext.SaveChanges();
+        }
+
+        public async void Update(int Id, Product product)
+        {
+            // Product matchedProduct = _storageDbContext.Find<Product>(product.Id) 
+            //     ?? throw new KeyNotFoundException();
+            // _logger.LogInformation("*** Product edit: {Edit}", matchedProduct.Name);
+            _storageDbContext.Update(product);
+
+            // await _storageDbContext.SaveChangesAsync();
             _storageDbContext.SaveChanges();
         }
 

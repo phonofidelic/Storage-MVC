@@ -32,8 +32,9 @@ namespace Storage.Controllers
         // GET: Products?filter=1&filter=2
         public async Task<IActionResult> Index([FromQuery] IEnumerable<int>? filter)
         {
-            var filteredProductsList = _productRepository
-                .FilterProducts(filter)
+            var filteredProducts = await _productRepository.FilterProductsAsync(filter);
+            
+            var filteredProductsList = filteredProducts
                 .ToList()
                 .Select(p => new ProductDetailsViewModel()
                 {
@@ -66,7 +67,7 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            var product = _productRepository.GetProductById(id);
+            var product = await _productRepository.GetProductByIdAsync(id);
 
             if (product == null)
             {
@@ -113,7 +114,7 @@ namespace Storage.Controllers
 
             if (ModelState.IsValid)
             {
-                _productRepository.Create(product);
+                await _productRepository.CreateAsync(product);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -139,7 +140,7 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            var product = _productRepository.GetProductById(id);
+            var product = await _productRepository.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound();
@@ -166,7 +167,7 @@ namespace Storage.Controllers
             {
                 try
                 {
-                    _productRepository.Update(id, product);
+                    await _productRepository.UpdateAsync(id, product);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -200,7 +201,7 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            var product = _productRepository.GetProductById(id);
+            var product = await _productRepository.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound();

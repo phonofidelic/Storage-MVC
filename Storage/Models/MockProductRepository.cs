@@ -44,18 +44,9 @@ namespace Storage.Models
             _mockDb.Products = newList;
         }
 
-        public void Update(int Id, Product product)
+        public Task UpdateAsync(int Id, Product product)
         {
-            _logger.LogInformation("Product update info: {Update}", product);
-        }
-
-        public IEnumerable<Product> FilterProducts(IEnumerable<int>? categoryIds)
-        {
-            if (categoryIds == null || categoryIds.IsNullOrEmpty())
-                return AllProducts;
-
-
-            return AllProducts.Where(p => categoryIds.Contains(p.CategoryId));
+            throw new NotImplementedException();
         }
 
         public Product? GetProductById(int? productId)
@@ -64,6 +55,22 @@ namespace Storage.Models
         }
 
         public void Delete(int Id)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Task<IEnumerable<Product>> FilterProductsAsync(IEnumerable<int>? categoryIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Product?> GetProductByIdAsync(int? productId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CreateAsync(ProductCreateDto product)
         {
             throw new NotImplementedException();
         }

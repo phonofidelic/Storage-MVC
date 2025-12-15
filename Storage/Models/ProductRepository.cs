@@ -10,6 +10,7 @@ namespace Storage.Models
 {
     public class ProductRepository : IProductRepository
     {
+        private IEnumerable<Product> _products { get; set; } = [];
         private readonly StorageContext _storageDbContext;
         private readonly ILogger<ProductRepository> _logger;
 
@@ -18,11 +19,16 @@ namespace Storage.Models
             _storageDbContext = storageDbContext;
             _logger = logger;
         }
+        private async Task<IEnumerable<Product>> GetAllProductsAsync()
+        {
+            _products = await _storageDbContext.Product.ToListAsync();
+            return _products;
+        }
         public IEnumerable<Product> AllProducts
         {
             get
             {
-                return _storageDbContext.Product.ToList();
+                return _products;
             }
         }
 
@@ -43,24 +49,15 @@ namespace Storage.Models
             _storageDbContext.SaveChanges();
         }
 
-        public async void Update(int Id, Product product)
+        public async Task UpdateAsync(int Id, Product product)
         {
             _storageDbContext.Update(product);
-            _storageDbContext.SaveChanges();
+            await _storageDbContext.SaveChangesAsync();
         }
 
-        public IEnumerable<Product> FilterProducts(IEnumerable<int>? categoryIds)
+        public async Task<Product?> GetProductByIdAsync(int? productId)
         {
-            if (categoryIds == null || categoryIds.IsNullOrEmpty())
-                return AllProducts;
-
-
-            return AllProducts.Where(p => categoryIds.Contains(p.CategoryId));
-        }
-
-        public Product? GetProductById(int? productId)
-        {
-            return AllProducts.FirstOrDefault(p => p.Id == productId);
+            return await _storageDbContext.FindAsync<Product>(productId);
         }
 
         public async void Delete(int Id)
@@ -72,6 +69,33 @@ namespace Storage.Models
             }
 
             _storageDbContext.SaveChanges();
+        }
+
+        public async Task<IEnumerable<Product>> FilterProductsAsync(IEnumerable<int>? categoryIds)
+        {
+            var allProducts = await GetAllProductsAsync();
+
+            if (categoryIds == null || categoryIds.IsNullOrEmpty())
+                return allProducts;
+
+
+            return allProducts.Where(p => categoryIds.Contains(p.CategoryId));
+        }
+
+        public async Task CreateAsync(ProductCreateDto product)
+        {
+            await _storageDbContext.AddAsync(new Product()
+            {
+                Name = product.Name,
+                Price = product.Price,
+                OrderDate = product.OrderDate,
+                CategoryId = product.CategoryId,
+                Shelf = product.Shelf,
+                Count = product.Count,
+                Description = product.Description
+            });
+
+            await _storageDbContext.SaveChangesAsync();
         }
     }
 }

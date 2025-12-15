@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using Storage.Models.Entities;
 using Storage.Models.ViewModels;
 
 namespace Storage.Models

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Storage.Models;
+using Storage.Models.Entities;
 using Storage.Models.ViewModels;
 using Storage.Services;
 

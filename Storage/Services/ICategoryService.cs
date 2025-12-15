@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Storage.Models;
+using Storage.Models.Entities;
 
 namespace Storage.Services
 {

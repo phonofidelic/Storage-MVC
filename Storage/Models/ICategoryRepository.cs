@@ -1,4 +1,6 @@
-﻿namespace Storage.Models
+﻿using Storage.Models.Entities;
+
+namespace Storage.Models
 {
     public interface ICategoryRepository
     {

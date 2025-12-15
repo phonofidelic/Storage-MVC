@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Storage.Models
+namespace Storage.Models.Entities
 {
     public class Product
     {

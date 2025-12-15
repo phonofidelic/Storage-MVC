@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using Storage.Data;
+using Storage.Models.Entities;
 
 namespace Storage.Models
 {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Storage.Data;
+using Storage.Models.Entities;
 using Storage.Models.ViewModels;
 
 namespace Storage.Models

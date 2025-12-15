@@ -1,3 +1,4 @@
+using Storage.Models.Entities;
 using System;
 
 namespace Storage.Models;

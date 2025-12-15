@@ -1,6 +1,7 @@
 ﻿using Storage.Models.ViewModels;
 using Bogus;
 using Microsoft.IdentityModel.Tokens;
+using Storage.Models.Entities;
 
 namespace Storage.Models
 {

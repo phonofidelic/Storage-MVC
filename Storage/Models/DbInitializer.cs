@@ -1,5 +1,6 @@
 ﻿using Storage.Data;
 using Bogus;
+using Storage.Models.Entities;
 
 namespace Storage.Models
 {

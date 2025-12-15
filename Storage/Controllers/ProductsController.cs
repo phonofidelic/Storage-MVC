@@ -17,6 +17,7 @@ namespace Storage.Controllers
     {
         private readonly StorageContext _context;
         private readonly IProductRepository _productRepository;
+        private readonly IProductService _productService;
         private readonly ICategoryRepository _categoryRepository;
         private readonly ICategoryService _categoryService;
         private readonly ILogger<ProductsController> _logger;
@@ -24,12 +25,14 @@ namespace Storage.Controllers
         public ProductsController(
             StorageContext context, 
             IProductRepository productRepository,
+            IProductService productService,
             ICategoryRepository categoryRepository,
             ICategoryService categoryService,
             ILogger<ProductsController> logger)
         {
             _context = context;
             _productRepository = productRepository;
+            _productService = productService;
             _categoryRepository = categoryRepository;
             _categoryService = categoryService;
             _logger = logger;
@@ -236,7 +239,13 @@ namespace Storage.Controllers
         // GET: Products/Summary
         public async Task<IActionResult> Summary()
         {
-            return View(_productRepository.GetSummary());
+            ProductSummaryViewModel viewModel = new()
+            {
+                ProductSummaries = _productRepository
+                    .AllProducts.Select(p => _productService.GetProductSummary(p)),
+
+            };
+            return View(viewModel);
         }
 
         private bool ProductExists(int id)

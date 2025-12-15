@@ -7,18 +7,15 @@ namespace Storage.Models
 {
     public class CategoryRepository : ICategoryRepository
     {
-        private readonly StorageContext _storateContext;
+        private readonly StorageContext _storageContext;
 
         public CategoryRepository(StorageContext storageContext) { 
-            _storateContext = storageContext;
+            _storageContext = storageContext;
         }
 
-        public IEnumerable<Category> AllCategories
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            get
-            {
-                return _storateContext.Category.Include(c => c.Products);
-            }
+            return await _storageContext.Category.Include(c => c.Products).ToListAsync();
         }
     }
 }

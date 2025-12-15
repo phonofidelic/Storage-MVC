@@ -13,4 +13,9 @@ public class MockCategoryRepository : ICategoryRepository
         _mockDb.Categories = DbInitializer.GenerateCategoriesWithIds();
     }
     public IEnumerable<Category> AllCategories => _mockDb.Categories;
+
+    public Task<IEnumerable<Category>> GetAllCategoriesAsync()
+    {
+        throw new NotImplementedException();
+    }
 }

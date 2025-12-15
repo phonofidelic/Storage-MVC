@@ -32,6 +32,7 @@ namespace Storage.Controllers
         // GET: Products?filter=1&filter=2
         public async Task<IActionResult> Index([FromQuery] IEnumerable<int>? filter)
         {
+            var allCategories = await _categoryRepository.GetAllCategoriesAsync();
             var filteredProducts = await _productRepository.FilterProductsAsync(filter);
             
             var filteredProductsList = filteredProducts
@@ -43,7 +44,7 @@ namespace Storage.Controllers
                     Price = p.Price,
                     OrderDate = p.OrderDate,
                     CategoryId = p.CategoryId,
-                    Category = _categoryRepository.AllCategories.First(c => c.Id == p.CategoryId),
+                    Category = allCategories.First(c => c.Id == p.CategoryId),
                     Shelf = p.Shelf,
                     Count = p.Count,
                     Description = p.Description
@@ -53,7 +54,7 @@ namespace Storage.Controllers
             {
                 Products = filteredProductsList,
                 Count = filteredProductsList.Count(),
-                Categories = _categoryService.GetCategorySelects(_categoryRepository.AllCategories, filter),
+                Categories = _categoryService.GetCategorySelects(allCategories, filter),
                 SelectedCategoryIds = filter
             };
             return View(viewModel);
@@ -74,6 +75,7 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
+            var allCategories = await _categoryRepository.GetAllCategoriesAsync();
             ProductDetailsViewModel viewModel = new()
             {
                 Id = product.Id,
@@ -81,7 +83,7 @@ namespace Storage.Controllers
                 Price = product.Price,
                 OrderDate = product.OrderDate,
                 CategoryId = product.CategoryId,
-                Category = _categoryRepository.AllCategories.First(c => c.Id == product.CategoryId),
+                Category = allCategories.First(c => c.Id == product.CategoryId),
                 Shelf = product.Shelf,
                 Count = product.Count,
                 Description = product.Description
@@ -91,11 +93,12 @@ namespace Storage.Controllers
         }
 
         // GET: Products/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var allCategories = await _categoryRepository.GetAllCategoriesAsync();
             ProductCreateViewModel viewModel = new()
             {
-                Categories = _categoryService.GetCategorySelects(_categoryRepository.AllCategories)
+                Categories = _categoryService.GetCategorySelects(allCategories)
             };
             return View(viewModel);
         }
@@ -118,6 +121,7 @@ namespace Storage.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            var allCategories = await _categoryRepository.GetAllCategoriesAsync();
             ProductCreateViewModel viewModel = new()
             {
                 Name = product.Name,
@@ -126,7 +130,7 @@ namespace Storage.Controllers
                 CategoryId = product.CategoryId,
                 Shelf = product.Shelf,
                 Count = product.Count,
-                Categories = _categoryService.GetCategorySelects(_categoryRepository.AllCategories, [product.CategoryId])
+                Categories = _categoryService.GetCategorySelects(allCategories, [product.CategoryId])
             };
 
             return View(product);
@@ -146,7 +150,7 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            var categories = _categoryRepository.AllCategories;
+            var categories = await _categoryRepository.GetAllCategoriesAsync();
             ProductEditViewModel viewModel = new()
             {
                 Product = product,
@@ -183,7 +187,7 @@ namespace Storage.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var categories = _categoryRepository.AllCategories;
+            var categories = await _categoryRepository.GetAllCategoriesAsync();
             ProductEditViewModel viewModel = new()
             {
                 Product = product,

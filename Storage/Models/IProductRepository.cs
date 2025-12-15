@@ -11,6 +11,7 @@ namespace Storage.Models
         IEnumerable<Product> FilterProducts(IEnumerable<int>? categoryIds);
         void Create(ProductCreateDto product);
         void Update(int Id, Product product);
+        void Delete(int Id);
     }
 
 }

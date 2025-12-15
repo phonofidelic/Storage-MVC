@@ -61,5 +61,16 @@ namespace Storage.Models
         {
             return AllProducts.FirstOrDefault(p => p.Id == productId);
         }
+
+        public async void Delete(int Id)
+        {
+            var product = _storageDbContext.Product.Find(Id);
+            if (product != null)
+            {
+                _storageDbContext.Product.Remove(product);
+            }
+
+            _storageDbContext.SaveChanges();
+        }
     }
 }

@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Storage.Data;
 using Storage.Models;
 using Storage.Models.ViewModels;
 using Storage.Services;
@@ -15,7 +8,6 @@ namespace Storage.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly StorageContext _context;
         private readonly IProductRepository _productRepository;
         private readonly IProductService _productService;
         private readonly ICategoryRepository _categoryRepository;
@@ -23,14 +15,12 @@ namespace Storage.Controllers
         private readonly ILogger<ProductsController> _logger;
 
         public ProductsController(
-            StorageContext context, 
             IProductRepository productRepository,
             IProductService productService,
             ICategoryRepository categoryRepository,
             ICategoryService categoryService,
             ILogger<ProductsController> logger)
         {
-            _context = context;
             _productRepository = productRepository;
             _productService = productService;
             _categoryRepository = categoryRepository;
@@ -209,8 +199,7 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var product = _productRepository.GetProductById(id);
             if (product == null)
             {
                 return NotFound();
@@ -224,17 +213,9 @@ namespace Storage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Product.FindAsync(id);
-            if (product != null)
-            {
-                _context.Product.Remove(product);
-            }
-
-            await _context.SaveChangesAsync();
+            _productRepository.Delete(id);
             return RedirectToAction(nameof(Index));
         }
-
-        
 
         // GET: Products/Summary
         public async Task<IActionResult> Summary()

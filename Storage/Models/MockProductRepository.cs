@@ -61,5 +61,10 @@ namespace Storage.Models
         {
             return AllProducts.FirstOrDefault(p => p.Id == productId);
         }
+
+        public void Delete(int Id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

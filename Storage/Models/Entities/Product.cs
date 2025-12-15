@@ -27,5 +27,7 @@ namespace Storage.Models.Entities
         
         [StringLength(200)]
         public string? Description { get; set; } = string.Empty;
+
+        public Image? Image { get; set; }
     }
 }

@@ -239,12 +239,15 @@ namespace Storage.Controllers
         // GET: Products/Summary
         public async Task<IActionResult> Summary()
         {
+            var productSummaries = _productRepository
+                    .AllProducts.Select(p => _productService.GetProductSummary(p));
+
             ProductSummaryViewModel viewModel = new()
             {
-                ProductSummaries = _productRepository
-                    .AllProducts.Select(p => _productService.GetProductSummary(p)),
-
+                ProductSummaries = productSummaries,
+                TotalInventoryValue = _productService.GetTotalInventoryValue(productSummaries)
             };
+
             return View(viewModel);
         }
 

@@ -15,5 +15,10 @@ namespace Storage.Services
                 InventoryValue = product.Price * product.Count
             };
         }
+
+        public int GetTotalInventoryValue(IEnumerable<ProductSummary> productSummaries)
+        {
+            return productSummaries.Sum(p => p.InventoryValue);
+        }
     }
 }

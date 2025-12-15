@@ -21,7 +21,6 @@ namespace Storage.Models
         {
             get
             {
-                // return _storageDbContext.Product.Include(p => p.Category);
                 return _storageDbContext.Product.ToList();
             }
         }
@@ -36,7 +35,7 @@ namespace Storage.Models
                 CategoryId = product.CategoryId,
                 Shelf = product.Shelf,
                 Count = product.Count,
-                Description = product.Description ?? ""
+                Description = product.Description
             });
             
         
@@ -45,12 +44,7 @@ namespace Storage.Models
 
         public async void Update(int Id, Product product)
         {
-            // Product matchedProduct = _storageDbContext.Find<Product>(product.Id) 
-            //     ?? throw new KeyNotFoundException();
-            // _logger.LogInformation("*** Product edit: {Edit}", matchedProduct.Name);
             _storageDbContext.Update(product);
-
-            // await _storageDbContext.SaveChangesAsync();
             _storageDbContext.SaveChanges();
         }
 

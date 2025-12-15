@@ -26,4 +26,4 @@ public class ProductCreateViewModel
         [MaxLength(200)]
         public string? Description { get; set; } = string.Empty;
         public List<SelectListItem> Categories { get; set; } = [];
-    }
+}

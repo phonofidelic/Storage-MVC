@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Bogus.DataSets;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -109,11 +108,28 @@ namespace Storage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Price,OrderDate,CategoryId,Shelf,Count,Description")] ProductCreateDto product)
         {
+            if (product == null)
+            {
+                return NotFound(); 
+            }
+
             if (ModelState.IsValid)
             {
                 _productRepository.Create(product);
                 return RedirectToAction(nameof(Index));
             }
+
+            ProductCreateViewModel viewModel = new()
+            {
+                Name = product.Name,
+                Price = product.Price,
+                OrderDate = product.OrderDate,
+                CategoryId = product.CategoryId,
+                Shelf = product.Shelf,
+                Count = product.Count,
+                Categories = GetCategorySelects(_categoryRepository.AllCategories, [product.CategoryId])
+            };
+
             return View(product);
         }
 

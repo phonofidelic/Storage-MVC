@@ -10,5 +10,5 @@ public record ProductCreateDto
     int CategoryId,
     string Shelf,
     int Count,
-    string Description
+    string? Description
 );

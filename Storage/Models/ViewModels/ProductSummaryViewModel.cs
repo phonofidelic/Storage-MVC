@@ -2,7 +2,14 @@
 
 namespace Storage.Models.ViewModels
 {
-    public class ProductViewModel
+    public class ProductSummaryViewModel
+    {
+        public ProductSummary ProductSummary { get; set; } = default!;
+        public IEnumerable<ProductSummary> ProductSummaries { get; set;  } = [];
+        public int TotalInventoryValue { get; set; }
+    }
+
+    public class ProductSummary
     {
         public string Name { get; set; } = string.Empty;
         [DataType(DataType.Currency)]

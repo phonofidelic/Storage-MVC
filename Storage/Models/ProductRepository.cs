@@ -62,15 +62,18 @@ namespace Storage.Models
             return AllProducts.FirstOrDefault(p => p.Id == productId);
         }
 
-        public IEnumerable<ProductViewModel> GetSummary()
+        public ProductSummaryViewModel GetSummary()
         {
-            return AllProducts.Select(p => new ProductViewModel()
+            return new ProductSummaryViewModel()
             {
-                Name = p.Name,
-                Price = p.Price,
-                Count = p.Count,
-                InventoryValue = p.Price * p.Count
-            });
+                ProductSummaries = AllProducts.Select(product => new ProductSummary()
+                {
+                    Name = product.Name,
+                    Price = product.Price,
+                    Count = product.Count,
+                    InventoryValue = product.Price * product.Count
+                })
+            };
         }
     }
 }

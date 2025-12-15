@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Storage.Models.ViewModels.ProductViewModel>
+﻿@model Storage.Models.ViewModels.ProductSummaryViewModel
 
 @{
     ViewData["Title"] = "Summary";
@@ -13,22 +13,23 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.ProductSummary.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.DisplayNameFor(model => model.ProductSummary.Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Count)
+                @Html.DisplayNameFor(model => model.ProductSummary.Count)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.InventoryValue)
+                @Html.DisplayNameFor(model => model.ProductSummary.InventoryValue)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model.ProductSummaries)
+        {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)

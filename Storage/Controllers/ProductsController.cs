@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Storage.Data;
 using Storage.Models;
 using Storage.Models.ViewModels;
+using Storage.Services;
 
 namespace Storage.Controllers
 {
@@ -17,17 +18,20 @@ namespace Storage.Controllers
         private readonly StorageContext _context;
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ICategoryService _categoryService;
         private readonly ILogger<ProductsController> _logger;
 
         public ProductsController(
             StorageContext context, 
             IProductRepository productRepository,
             ICategoryRepository categoryRepository,
+            ICategoryService categoryService,
             ILogger<ProductsController> logger)
         {
             _context = context;
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
+            _categoryService = categoryService;
             _logger = logger;
         }
 
@@ -54,7 +58,7 @@ namespace Storage.Controllers
             {
                 Products = filteredProductsList,
                 Count = filteredProductsList.Count(),
-                Categories = GetCategorySelects(_categoryRepository.AllCategories, filter),
+                Categories = _categoryService.GetCategorySelects(_categoryRepository.AllCategories, filter),
                 SelectedCategoryIds = filter
             };
             return View(viewModel);
@@ -96,7 +100,7 @@ namespace Storage.Controllers
         {
             ProductCreateViewModel viewModel = new()
             {
-                Categories = GetCategorySelects(_categoryRepository.AllCategories)
+                Categories = _categoryService.GetCategorySelects(_categoryRepository.AllCategories)
             };
             return View(viewModel);
         }
@@ -127,7 +131,7 @@ namespace Storage.Controllers
                 CategoryId = product.CategoryId,
                 Shelf = product.Shelf,
                 Count = product.Count,
-                Categories = GetCategorySelects(_categoryRepository.AllCategories, [product.CategoryId])
+                Categories = _categoryService.GetCategorySelects(_categoryRepository.AllCategories, [product.CategoryId])
             };
 
             return View(product);
@@ -151,7 +155,7 @@ namespace Storage.Controllers
             ProductEditViewModel viewModel = new()
             {
                 Product = product,
-                Categories = GetCategorySelects(categories, [product.CategoryId]),
+                Categories = _categoryService.GetCategorySelects(categories, [product.CategoryId]),
             };
 
             return View(viewModel);
@@ -188,7 +192,7 @@ namespace Storage.Controllers
             ProductEditViewModel viewModel = new()
             {
                 Product = product,
-                Categories = GetCategorySelects(categories, [product.CategoryId])
+                Categories = _categoryService.GetCategorySelects(categories, [product.CategoryId])
             };
 
             return View(viewModel);
@@ -240,14 +244,6 @@ namespace Storage.Controllers
             return _productRepository.AllProducts.Any(e => e.Id == id);
         }
 
-        private static List<SelectListItem> GetCategorySelects(IEnumerable<Category> categories, IEnumerable<int>? selectedIds = null)
-        {
-            return categories.Select(c => new SelectListItem()
-            {
-                Value = c.Id.ToString(),
-                Text = c.Name,
-                Selected = selectedIds?.Contains(c.Id) ?? false
-            }).ToList();
-        }
+        
     }
 }

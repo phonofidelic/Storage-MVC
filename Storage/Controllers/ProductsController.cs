@@ -37,18 +37,7 @@ namespace Storage.Controllers
             
             var filteredProductsList = filteredProducts
                 .ToList()
-                .Select(p => new ProductDetailsViewModel()
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Price = p.Price,
-                    OrderDate = p.OrderDate,
-                    CategoryId = p.CategoryId,
-                    Category = allCategories.First(c => c.Id == p.CategoryId),
-                    Shelf = p.Shelf,
-                    Count = p.Count,
-                    Description = p.Description
-                });
+                .Select(product => _productService.MapProductDetails(product, allCategories));
 
             AllProductsViewModel viewModel = new()
             {
@@ -76,18 +65,8 @@ namespace Storage.Controllers
             }
 
             var allCategories = await _categoryRepository.GetAllCategoriesAsync();
-            ProductDetailsViewModel viewModel = new()
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price,
-                OrderDate = product.OrderDate,
-                CategoryId = product.CategoryId,
-                Category = allCategories.First(c => c.Id == product.CategoryId),
-                Shelf = product.Shelf,
-                Count = product.Count,
-                Description = product.Description
-            };
+
+            ProductDetailsViewModel viewModel = _productService.MapProductDetails(product, allCategories);
 
             return View(viewModel);
         }

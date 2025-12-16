@@ -20,5 +20,22 @@ namespace Storage.Services
         {
             return productSummaries.Sum(p => p.InventoryValue);
         }
+
+        public ProductDetailsViewModel MapProductDetails(Product product, IEnumerable<Category> allCategories)
+        {
+
+            return new()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                OrderDate = product.OrderDate,
+                CategoryId = product.CategoryId,
+                Category = allCategories.First(c => c.Id == product.CategoryId),
+                Shelf = product.Shelf,
+                Count = product.Count,
+                Description = product.Description
+            };
+        }
     }
 }

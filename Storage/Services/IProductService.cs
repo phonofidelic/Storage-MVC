@@ -7,5 +7,6 @@ namespace Storage.Services
     {
         public ProductSummary GetProductSummary(Product product);
         public int GetTotalInventoryValue(IEnumerable<ProductSummary> inventoryValues);
+        public ProductDetailsViewModel MapProductDetails(Product product, IEnumerable<Category> allCategories);
     }
 }

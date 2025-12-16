@@ -234,9 +234,13 @@ namespace Storage.Controllers
             
             var allCategories = await _categoryRepository.GetAllCategoriesAsync();
 
-            ProductDetailsViewModel viewModel = _productService.MapProductDetails(product, allCategories);
+            ProductEditViewModel viewModel = new()
+            {
+                Product = product,
 
-            return View(nameof(Details), viewModel);
+            };
+
+            return View(nameof(Edit), viewModel);
         }
 
         private bool ProductExists(int id)

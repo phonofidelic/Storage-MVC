@@ -8,75 +8,67 @@
 
 <h4>Product</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" method="POST">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Product.Id" />
-            <div class="form-group">
-                <label asp-for="Product.Name" class="control-label"></label>
-                <input asp-for="Product.Name" class="form-control" />
-                <span asp-validation-for="Product.Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Product.Price" class="control-label"></label>
-                <input asp-for="Product.Price" class="form-control" />
-                <span asp-validation-for="Product.Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Product.OrderDate" class="control-label"></label>
-                <input asp-for="Product.OrderDate" class="form-control" />
-                <span asp-validation-for="Product.OrderDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Product.CategoryId" class="control-label"></label>
-                <select asp-for="Product.CategoryId" asp-items="Model.Categories" class="form-control"></select>
-                <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Product.Shelf" class="control-label"></label>
-                <input asp-for="Product.Shelf" class="form-control" />
-                <span asp-validation-for="Product.Shelf" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Product.Count" class="control-label"></label>
-                <input asp-for="Product.Count" class="form-control" />
-                <span asp-validation-for="Product.Count" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Product.Description" class="control-label"></label>
-                <input asp-for="Product.Description" class="form-control" />
-                <span asp-validation-for="Product.Description" class="text-danger"></span>
-            </div>
-            @if (Model.Product.Image != null)
-            {
-                <div class="form-group">
-                    <label asp-for="Product.Image.Path" class="control-label"></label>
-                    <input asp-for="Product.Image.Path" class="form-control" />
-                    <span asp-validation-for="Product.Shelf" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Product.Image.Alt" class="control-label"></label>
-                    <input asp-for="Product.Image.Alt" class="form-control" />
-                    <span asp-validation-for="Product.Shelf" class="text-danger"></span>
-                </div>
-            }
-            else
-            {
-                <div class="form-group py-3">
-                    <a>Add Image</a>
-                </div>
-            }
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Edit" method="POST" class="row">
+    <div class="col-md-6 col-lg-4 pb-3">
+        <h5>Product Info:</h5>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Product.Id" />
+        <div class="form-group">
+            <label asp-for="Product.Name" class="control-label"></label>
+            <input asp-for="Product.Name" class="form-control" />
+            <span asp-validation-for="Product.Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Product.Price" class="control-label"></label>
+            <input asp-for="Product.Price" class="form-control" />
+            <span asp-validation-for="Product.Price" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Product.OrderDate" class="control-label"></label>
+            <input asp-for="Product.OrderDate" class="form-control" />
+            <span asp-validation-for="Product.OrderDate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Product.CategoryId" class="control-label"></label>
+            <select asp-for="Product.CategoryId" asp-items="Model.Categories" class="form-control"></select>
+            <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Product.Shelf" class="control-label"></label>
+            <input asp-for="Product.Shelf" class="form-control" />
+            <span asp-validation-for="Product.Shelf" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Product.Count" class="control-label"></label>
+            <input asp-for="Product.Count" class="form-control" />
+            <span asp-validation-for="Product.Count" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Product.Description" class="control-label"></label>
+            <textarea rows="5" asp-for="Product.Description" class="form-control"></textarea>
+            <span asp-validation-for="Product.Description" class="text-danger"></span>
+        </div>
+        </div>
+        <div class=" col-sm-6">
+        <h5>Product Image:</h5>
+        @if (Model.Product.Image != null)
+        {
+            <img alt="@Model.Product.Image.Alt" src="~/images/@Model.Product.Image.Path" />
+            <a>Edit image</a>
+        }
+        else
+        {
+            <partial name="_ProductImageInputPartial" model="@Model" />
+        }
     </div>
-</div>
+    <div class="form-group col-sm-12 d-flex py-3 gap-3 align-items-center">
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </div>
+</form>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{

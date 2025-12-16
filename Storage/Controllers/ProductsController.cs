@@ -144,7 +144,7 @@ namespace Storage.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,OrderDate,CategoryId,Shelf,Count,Description")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,OrderDate,CategoryId,Shelf,Count,Description,Image")] Product product)
         {
             if (ModelState.IsValid)
             {
@@ -217,11 +217,31 @@ namespace Storage.Controllers
             return View(viewModel);
         }
 
+        public async Task<IActionResult> AddProductImage(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _productRepository.GetProductByIdAsync(id);
+
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+            
+            var allCategories = await _categoryRepository.GetAllCategoriesAsync();
+
+            ProductDetailsViewModel viewModel = _productService.MapProductDetails(product, allCategories);
+
+            return View(nameof(Details), viewModel);
+        }
+
         private bool ProductExists(int id)
         {
             return _productRepository.AllProducts.Any(e => e.Id == id);
         }
-
-        
     }
 }

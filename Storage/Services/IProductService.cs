@@ -1,4 +1,5 @@
-﻿using Storage.Models.Entities;
+﻿using Storage.Models;
+using Storage.Models.Entities;
 using Storage.Models.ViewModels;
 
 namespace Storage.Services
@@ -7,6 +8,7 @@ namespace Storage.Services
     {
         public ProductSummary GetProductSummary(Product product);
         public int GetTotalInventoryValue(IEnumerable<ProductSummary> inventoryValues);
-        public ProductDetailsViewModel MapProductDetails(Product product, IEnumerable<Category> allCategories);
+        public ProductDetailsViewModel MapProductDetails(Product product);
+        public ProductDetailsViewModel MapProductDetails(Product product, CreateImageDto image);
     }
 }

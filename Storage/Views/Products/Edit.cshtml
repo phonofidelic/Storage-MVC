@@ -53,12 +53,13 @@
         <h5>Product Image:</h5>
         @if (Model.Product.Image != null)
         {
-            <img alt="@Model.Product.Image.Alt" src="~/images/@Model.Product.Image.Path" />
+            <img alt="@Model.Product.Image.AltText" src="~/images/@Model.Product.Image.ImagePath" />
             <a>Edit image</a>
         }
         else
         {
-            <imageinput alt="test" src="test"></imageinput>
+            @* <imageinput alt="test" src="test"></imageinput> *@
+            <partial name="_ProductImageInputPartial" alt="test alt" src="test" />
         }
     </div>
     <div class="form-group col-sm-12 d-flex py-3 gap-3 align-items-center">

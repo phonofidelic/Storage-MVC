@@ -28,7 +28,7 @@ namespace Storage.Models
         {
             get
             {
-                return _products;
+                return _storageDbContext.Product.Include(p => p.Category);
             }
         }
 
@@ -49,7 +49,7 @@ namespace Storage.Models
             _storageDbContext.SaveChanges();
         }
 
-        public async Task UpdateAsync(int Id, Product product)
+        public async Task UpdateAsync(int Id, ProductDetailsViewModel product)
         {
             _storageDbContext.Update(product);
             await _storageDbContext.SaveChangesAsync();

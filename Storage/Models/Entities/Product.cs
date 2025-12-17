@@ -18,6 +18,8 @@ namespace Storage.Models.Entities
         [Display(Name = "Order Date")]
         [DataType(DataType.Date)]
         public DateTime OrderDate { get; set; }
+
+        public Category Category { get; set; } = default!;
         public int CategoryId { get; set; }
         public string Shelf { get; set; } = string.Empty;
         

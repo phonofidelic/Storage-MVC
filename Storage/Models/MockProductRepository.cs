@@ -44,7 +44,7 @@ namespace Storage.Models
             _mockDb.Products = newList;
         }
 
-        public Task UpdateAsync(int Id, Product product)
+        public Task UpdateAsync(int Id, ProductDetailsViewModel product)
         {
             throw new NotImplementedException();
         }

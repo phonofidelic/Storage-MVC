@@ -11,7 +11,7 @@ namespace Storage.Models
         Task<Product?> GetProductByIdAsync(int? productId);
         Task<IEnumerable<Product>> FilterProductsAsync(IEnumerable<int>? categoryIds);
         Task CreateAsync(ProductCreateDto product);
-        Task UpdateAsync(int Id, Product product);
+        Task UpdateAsync(int Id, ProductDetailsViewModel product);
         void Delete(int Id);
     }
 

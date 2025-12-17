@@ -7,7 +7,7 @@ namespace Storage.Models.ViewModels
 {
     public class ProductEditViewModel
     {
-        public Product Product { get; set; } = default!;
+        public ProductDetailsViewModel Product { get; set; } = default!;
         public IEnumerable<SelectListItem> Categories { get; set; } = [];
     }
 }

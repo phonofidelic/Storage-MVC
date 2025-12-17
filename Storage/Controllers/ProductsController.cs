@@ -13,6 +13,7 @@ namespace Storage.Controllers
         private readonly IProductService _productService;
         private readonly ICategoryRepository _categoryRepository;
         private readonly ICategoryService _categoryService;
+        private readonly IImageRepository _imageRepository;
         private readonly ILogger<ProductsController> _logger;
 
         public ProductsController(
@@ -20,12 +21,14 @@ namespace Storage.Controllers
             IProductService productService,
             ICategoryRepository categoryRepository,
             ICategoryService categoryService,
+            IImageRepository imageRepository,
             ILogger<ProductsController> logger)
         {
             _productRepository = productRepository;
             _productService = productService;
             _categoryRepository = categoryRepository;
             _categoryService = categoryService;
+            _imageRepository = imageRepository;
             _logger = logger;
         }
 
@@ -37,7 +40,7 @@ namespace Storage.Controllers
             
             var filteredProductsList = filteredProducts
                 .ToList()
-                .Select(product => _productService.MapProductDetails(product, allCategories));
+                .Select(_productService.MapProductDetails);
 
             AllProductsViewModel viewModel = new()
             {
@@ -66,7 +69,7 @@ namespace Storage.Controllers
 
             var allCategories = await _categoryRepository.GetAllCategoriesAsync();
 
-            ProductDetailsViewModel viewModel = _productService.MapProductDetails(product, allCategories);
+            ProductDetailsViewModel viewModel = _productService.MapProductDetails(product);
 
             return View(viewModel);
         }
@@ -128,11 +131,12 @@ namespace Storage.Controllers
             {
                 return NotFound();
             }
+            ProductDetailsViewModel productViewModel = _productService.MapProductDetails(product);
 
             var categories = await _categoryRepository.GetAllCategoriesAsync();
             ProductEditViewModel viewModel = new()
             {
-                Product = product,
+                Product = _productService.MapProductDetails(product),
                 Categories = _categoryService.GetCategorySelects(categories, [product.CategoryId]),
             };
 
@@ -144,13 +148,20 @@ namespace Storage.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,OrderDate,CategoryId,Shelf,Count,Description,Image")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,OrderDate,CategoryId,Shelf,Count,Description,Image")] ProductDetailsViewModel viewModel)
         {
+            var product = await _productRepository.GetProductByIdAsync(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _productRepository.UpdateAsync(id, product);
+                    await _productRepository.UpdateAsync(id, viewModel);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -167,13 +178,51 @@ namespace Storage.Controllers
             }
 
             var categories = await _categoryRepository.GetAllCategoriesAsync();
-            ProductEditViewModel viewModel = new()
-            {
-                Product = product,
-                Categories = _categoryService.GetCategorySelects(categories, [product.CategoryId])
-            };
+            //ProductEditViewModel viewModel = new()
+            //{
+            //    Product = product,
+            //    Categories = _categoryService.GetCategorySelects(categories, [product.CategoryId])
+            //};
 
             return View(viewModel);
+        }
+
+        // POST: Products/SaveProductImage/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult>SaveProductImage(int id, [Bind("ImagePath,AltText")] CreateImageDto createImageDto)
+        {
+            var product = await _productRepository.GetProductByIdAsync(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var productDetailsViewModel = _productService.MapProductDetails(product, createImageDto);
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _imageRepository.CreateAsync(createImageDto);
+                    await _productRepository.UpdateAsync(id, productDetailsViewModel);
+                } catch (DbUpdateConcurrencyException) {
+                    if (!ProductExists(product.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return View(nameof(Edit), productDetailsViewModel);
+            }
+
+            return View(nameof(Edit), _productService.MapProductDetails(product));
         }
 
         // GET: Products/Delete/5
@@ -236,7 +285,7 @@ namespace Storage.Controllers
 
             ProductEditViewModel viewModel = new()
             {
-                Product = product,
+                Product = _productService.MapProductDetails(product),
 
             };
 

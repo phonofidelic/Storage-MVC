@@ -5,16 +5,16 @@
 @model ProductEditViewModel
 
 <div class="form-group">
-    <label asp-for="Product.Image.Path" class="control-label"></label>
-    <input asp-for="Product.Image.Path" class="form-control" />
-    <span asp-validation-for="Product.Image.Path" class="text-danger"></span>
+    <label asp-for="Product.Image.ImagePath" class="control-label"></label>
+    <input asp-for="Product.Image.ImagePath" class="form-control" />
+    <span asp-validation-for="Product.Image.ImagePath" class="text-danger"></span>
 </div>
 <div class="form-group">
-    <label asp-for="Product.Image.Alt" class="control-label"></label>
-    <input asp-for="Product.Image.Alt" class="form-control" />
-    <span asp-validation-for="Product.Image.Alt" class="text-danger"></span>
+    <label asp-for="Product.Image.AltText" class="control-label"></label>
+    <input asp-for="Product.Image.AltText" class="form-control" />
+    <span asp-validation-for="Product.Image.AltText" class="text-danger"></span>
     <div class="form-group py-3 d-flex align-items-center gap-3">
-        <a asp-action="AddProductImage" asp-route-id="Product.Id" class="btn btn-primary">Save Image</a>
+        <a asp-action="AddProductImage" asp-route-id="@Model.Product.Id" class="btn btn-primary">Save Image</a>
         <a class="text-danger" href="">Cancel</a>
     </div>
 </div>

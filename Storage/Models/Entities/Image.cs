@@ -6,8 +6,6 @@ namespace Storage.Models.Entities
     {
         public int Id { get; set; }
         public string Path { get; set; } = default!;
-
-        [Display(Name = "Alt text")]
         public string Alt { get; set; } = default!;
     }
 }

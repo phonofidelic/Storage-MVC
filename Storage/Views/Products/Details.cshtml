@@ -57,7 +57,7 @@
         <div class="col-sm-6">
             @if (Model.Image != null)
             {
-                <imd alt="@Model.Image.AltText" src="~/images/@Model.Image.ImagePath" />
+                <img class="img-fluid" alt="@Model.Image.Alt" src="~/images/@Model.Image.Path" style="max-height: 500px" />
             }
         </div>
     </div>

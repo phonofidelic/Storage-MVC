@@ -28,7 +28,7 @@ namespace Storage.Models
         {
             get
             {
-                return _storageDbContext.Product.Include(p => p.Category);
+                return _storageDbContext.Product.Include(p => p.Category).Include(p => p.Image);
             }
         }
 
@@ -49,15 +49,43 @@ namespace Storage.Models
             _storageDbContext.SaveChanges();
         }
 
-        public async Task UpdateAsync(int Id, ProductDetailsViewModel product)
+        public async Task UpdateAsync(ProductEditDto productEditDto)
         {
-            _storageDbContext.Update(product);
+            Product product = await _storageDbContext.FindAsync<Product>(productEditDto.Id) ?? 
+                throw new Exception(string.Format("Could not find product with Id '(Id)'", productEditDto.Id));
+
+            Image? productImage = productEditDto.Image?.Alt != null && productEditDto.Image?.Path != null ? new()
+            {
+                Alt = productEditDto.Image.Alt ?? product.Image?.Alt!,
+                Path = productEditDto.Image.Path ?? product.Image?.Path!
+            } : product.Image;
+
+            if (productImage != null)
+            {
+                _storageDbContext.Add(productImage);
+            }
+
+            product.Name = productEditDto.Name ?? product.Name;
+            product.Price = productEditDto.Price ?? product.Price;
+            product.OrderDate = productEditDto.OrderDate ?? product.OrderDate;
+            product.Category = productEditDto.Category ?? product.Category;
+            product.CategoryId = productEditDto.CategoryId ?? product.CategoryId;
+            product.Shelf = productEditDto.Shelf ?? product.Shelf;
+            product.Count = productEditDto.Count ?? product.Count;
+            product.Description = productEditDto.Description ?? product.Description;
+            product.Image = productImage ?? product.Image;
+
+
+            // _storageDbContext.Update(product);
             await _storageDbContext.SaveChangesAsync();
         }
 
         public async Task<Product?> GetProductByIdAsync(int? productId)
         {
-            return await _storageDbContext.FindAsync<Product>(productId);
+            return await _storageDbContext.Product
+                .Include(p => p.Category)
+                .Include(p => p.Image)
+                .FirstAsync(p => p.Id == productId);
         }
 
         public async void Delete(int Id)

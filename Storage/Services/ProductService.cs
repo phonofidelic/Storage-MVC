@@ -1,4 +1,5 @@
-﻿using Storage.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Storage.Models;
 using Storage.Models.Entities;
 using Storage.Models.ViewModels;
 
@@ -22,8 +23,18 @@ namespace Storage.Services
             return productSummaries.Sum(p => p.InventoryValue);
         }
 
+        public ImageInputViewModel? MapImageInputViewModel(Image? image)
+        {
+            return image != null ? new ()
+            {
+                Alt = image.Alt,
+                Path = image.Path
+            } : null;
+        }
+
         public ProductDetailsViewModel MapProductDetails(Product product)
         {
+            
 
             return new()
             {
@@ -35,31 +46,26 @@ namespace Storage.Services
                 Category = product.Category,
                 Shelf = product.Shelf,
                 Count = product.Count,
-                Description = product.Description
+                Description = product.Description,
+                Image = MapImageInputViewModel(product.Image)
             };
         }
 
-        public ProductDetailsViewModel MapProductDetails(Product product, CreateImageDto image)
+        public ProductEditViewModel MapProductEditViewModel(Product product, IEnumerable<SelectListItem> categorySelectItems)
         {
-            ImageInputViewModel imageViewModel = new()
-            {
-                IsOpen = false,
-                AltText = image.AltText,
-                ImagePath = image.ImagePath,
-            };
-
-            return new ProductDetailsViewModel()
+            return new()
             {
                 Id = product.Id,
                 Name = product.Name,
                 Price = product.Price,
                 OrderDate = product.OrderDate,
+                // Category = product.Category,
                 CategoryId = product.CategoryId,
-                Category = product.Category,
                 Shelf = product.Shelf,
                 Count = product.Count,
                 Description = product.Description,
-                Image = imageViewModel
+                Image = MapImageInputViewModel(product.Image),
+                CategorySelectItems = categorySelectItems,
             };
         }
     }

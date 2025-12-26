@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 using Storage.Models;
 using Storage.Models.Entities;
 using Storage.Models.ViewModels;
@@ -46,7 +48,7 @@ namespace Storage.Controllers
             {
                 Products = filteredProductsList,
                 Count = filteredProductsList.Count(),
-                Categories = _categoryService.GetCategorySelects(allCategories, filter),
+                Categories = _categoryService.GetCategorySelects(allCategories, filter ?? []),
                 SelectedCategoryIds = filter
             };
             return View(viewModel);
@@ -67,7 +69,7 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            var allCategories = await _categoryRepository.GetAllCategoriesAsync();
+            // var allCategories = await _categoryRepository.GetAllCategoriesAsync();
 
             ProductDetailsViewModel viewModel = _productService.MapProductDetails(product);
 
@@ -131,14 +133,16 @@ namespace Storage.Controllers
             {
                 return NotFound();
             }
-            ProductDetailsViewModel productViewModel = _productService.MapProductDetails(product);
 
             var categories = await _categoryRepository.GetAllCategoriesAsync();
-            ProductEditViewModel viewModel = new()
+            _logger.LogInformation("*** CategoryId: {CategoryId}", product.CategoryId);
+            foreach(var category in categories)
             {
-                Product = _productService.MapProductDetails(product),
-                Categories = _categoryService.GetCategorySelects(categories, [product.CategoryId]),
-            };
+                _logger.LogInformation("category.Id: {Id} {1}", category.Id, category.Id == product.CategoryId);
+            }
+            ProductEditViewModel viewModel = _productService.MapProductEditViewModel(
+                product, 
+                _categoryService.GetCategorySelects(categories, product.CategoryId));
 
             return View(viewModel);
         }
@@ -148,20 +152,54 @@ namespace Storage.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,OrderDate,CategoryId,Shelf,Count,Description,Image")] ProductDetailsViewModel viewModel)
+        public async Task<IActionResult> Edit([Bind("Id,Name,Price,OrderDate,Category,CategoryId,Shelf,Count,Description,Image")] ProductEditViewModel productEditViewModel)
         {
-            var product = await _productRepository.GetProductByIdAsync(id);
+            var product = await _productRepository.GetProductByIdAsync(productEditViewModel.Id);
 
             if (product == null)
             {
                 return NotFound();
             }
 
+            Category category = await _categoryRepository.GetCategoryByIdAsync(productEditViewModel.CategoryId) ?? throw new Exception("Category not found");
+
+            var categories = await _categoryRepository.GetAllCategoriesAsync();
+            ProductEditViewModel viewModel = _productService.MapProductEditViewModel(
+                product, _categoryService.GetCategorySelects(categories, productEditViewModel.CategoryId));
+
+            ImageInputViewModel? image = null;
+            
+            if (productEditViewModel.Image?.Path != null && productEditViewModel.Image?.Alt == null)
+            {
+                ModelState.AddModelError("ImageAlt", "An alternative text is required for all images");
+            }
+
+            if (productEditViewModel.Image?.Path != null && productEditViewModel.Image?.Alt != null)
+            {
+                image = new()
+                {
+                    Path = productEditViewModel.Image.Path,
+                    Alt = productEditViewModel.Image.Alt
+                };
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _productRepository.UpdateAsync(id, viewModel);
+                    ProductEditDto productEditDto = new(
+                        productEditViewModel.Id,
+                        productEditViewModel.Name,
+                        productEditViewModel.Price,
+                        productEditViewModel.OrderDate,
+                        productEditViewModel.CategoryId,
+                        category,
+                        productEditViewModel.Shelf,
+                        productEditViewModel.Count,
+                        productEditViewModel.Description,
+                        image
+                    );
+                    await _productRepository.UpdateAsync(productEditDto);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -177,52 +215,9 @@ namespace Storage.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var categories = await _categoryRepository.GetAllCategoriesAsync();
-            //ProductEditViewModel viewModel = new()
-            //{
-            //    Product = product,
-            //    Categories = _categoryService.GetCategorySelects(categories, [product.CategoryId])
-            //};
+            
 
             return View(viewModel);
-        }
-
-        // POST: Products/SaveProductImage/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult>SaveProductImage(int id, [Bind("ImagePath,AltText")] CreateImageDto createImageDto)
-        {
-            var product = await _productRepository.GetProductByIdAsync(id);
-
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            var productDetailsViewModel = _productService.MapProductDetails(product, createImageDto);
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await _imageRepository.CreateAsync(createImageDto);
-                    await _productRepository.UpdateAsync(id, productDetailsViewModel);
-                } catch (DbUpdateConcurrencyException) {
-                    if (!ProductExists(product.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return View(nameof(Edit), productDetailsViewModel);
-            }
-
-            return View(nameof(Edit), _productService.MapProductDetails(product));
         }
 
         // GET: Products/Delete/5
@@ -264,32 +259,6 @@ namespace Storage.Controllers
             };
 
             return View(viewModel);
-        }
-
-        public async Task<IActionResult> AddProductImage(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var product = await _productRepository.GetProductByIdAsync(id);
-
-
-            if (product == null)
-            {
-                return NotFound();
-            }
-            
-            var allCategories = await _categoryRepository.GetAllCategoriesAsync();
-
-            ProductEditViewModel viewModel = new()
-            {
-                Product = _productService.MapProductDetails(product),
-
-            };
-
-            return View(nameof(Edit), viewModel);
         }
 
         private bool ProductExists(int id)

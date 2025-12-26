@@ -1,7 +1,11 @@
-﻿using Storage.Data;
+﻿using System.Runtime;
+using System.Runtime.CompilerServices;
+using Storage.Data;
 using Storage.Models;
 using Storage.Models.Entities;
+using Storage.Models.ViewModels;
 
+namespace Storage.Models;
 internal class ImageRepository : IImageRepository
 {
     private readonly StorageContext _storageContext;
@@ -12,6 +16,7 @@ internal class ImageRepository : IImageRepository
     }
     public async Task CreateAsync(CreateImageDto image)
     {
+
         await _storageContext.AddAsync(new Image()
         {
             Alt = image.AltText,
@@ -19,7 +24,7 @@ internal class ImageRepository : IImageRepository
         });
     }
 
-    public async Task<GetImageDto?> GetImageByIdAsync(int id)
+    public async Task<ImageInputViewModel?> GetImageByIdAsync(int id)
     {
         var image = await _storageContext.FindAsync<Image>(id);
 
@@ -27,6 +32,9 @@ internal class ImageRepository : IImageRepository
             return null;
         }
 
-        return new GetImageDto(Id: image.Id, AltText: image.Alt, ImagePath: image.Path);
+        return new ImageInputViewModel() {
+            Alt = image.Alt,
+            Path = image.Path,
+        };
     }
 }

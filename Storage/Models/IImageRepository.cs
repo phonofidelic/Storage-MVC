@@ -1,8 +1,10 @@
-﻿namespace Storage.Models
+﻿using Storage.Models.ViewModels;
+
+namespace Storage.Models
 {
     public interface IImageRepository
     {
         Task CreateAsync(CreateImageDto image);
-        Task<GetImageDto?> GetImageByIdAsync(int id);
+        Task<ImageInputViewModel?> GetImageByIdAsync(int id);
     }
 }

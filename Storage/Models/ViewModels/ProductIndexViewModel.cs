@@ -2,7 +2,7 @@
 
 namespace Storage.Models.ViewModels
 {
-    public class AllProductsViewModel
+    public class ProductIndexViewModel
     {
         public ProductDetailsViewModel Product { get; set; } = default!;
         public int Count { get; set; }

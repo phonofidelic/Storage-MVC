@@ -44,7 +44,7 @@ namespace Storage.Controllers
                 .ToList()
                 .Select(_productService.MapProductDetails);
 
-            AllProductsViewModel viewModel = new()
+            ProductIndexViewModel viewModel = new()
             {
                 Products = filteredProductsList,
                 Count = filteredProductsList.Count(),

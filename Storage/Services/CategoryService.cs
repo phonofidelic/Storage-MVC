@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Storage.Models.Entities;
+using Storage.Models.ViewModels;
 
 namespace Storage.Services
 {
@@ -41,6 +42,37 @@ namespace Storage.Services
                 Value = c.Id.ToString(),
                 Text = c.Name,
             }).ToList();
+        }
+
+        public CategoryDetailsViewModel MapCategoryDetails(Category category)
+        {
+            return new()
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description = category.Description
+            };
+        }
+
+        public CategoryEditViewModel MapCategoryEdit(Category category)
+        {
+            return new()
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description = category.Description  
+            };
+        }
+
+        public CategoryListItemViewModel MapCategoryListItem(Category category)
+        {
+            return new()
+            {
+                Id = category.Id,
+                Name = category.Name,
+                ProductCount = category.Products?.Count ?? 0,
+                Description = category.Description
+            };
         }
     }
 }

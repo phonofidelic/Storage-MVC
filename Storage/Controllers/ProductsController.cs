@@ -42,7 +42,7 @@ namespace Storage.Controllers
             
             var filteredProductsList = filteredProducts
                 .ToList()
-                .Select(_productService.MapProductDetails);
+                .Select(_productService.MapProductListItem);
 
             ProductIndexViewModel viewModel = new()
             {

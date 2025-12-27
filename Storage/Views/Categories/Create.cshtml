@@ -1,4 +1,4 @@
-﻿@model Storage.Models.Entities.Category
+﻿@model CategoryCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -35,5 +35,7 @@
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

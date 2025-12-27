@@ -68,5 +68,20 @@ namespace Storage.Services
                 CategorySelectItems = categorySelectItems,
             };
         }
+
+        public ProductListItemViewModel MapProductListItem(Product product)
+        {
+            return new()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                OrderDate = product.OrderDate,
+                Category = product.Category,
+                Shelf = product.Shelf,
+                Count = product.Count,
+                Description = product.Description
+            };
+        }
     }
 }

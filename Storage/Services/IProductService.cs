@@ -10,7 +10,7 @@ namespace Storage.Services
         public ProductSummary GetProductSummary(Product product);
         public int GetTotalInventoryValue(IEnumerable<ProductSummary> inventoryValues);
         public ProductDetailsViewModel MapProductDetails(Product product);
-
+        public ProductListItemViewModel MapProductListItem(Product product);
         public ProductEditViewModel MapProductEditViewModel(Product product, IEnumerable<SelectListItem> categorySelectItems);
         public ImageInputViewModel? MapImageInputViewModel(Image? image);
     }

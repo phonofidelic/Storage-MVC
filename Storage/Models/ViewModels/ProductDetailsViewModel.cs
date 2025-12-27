@@ -10,7 +10,7 @@ public class ProductDetailsViewModel
 
     [Required]
     [StringLength(100)]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; } = default!;
 
     [Required]
     [Range(0, int.MaxValue, ErrorMessage = "{0} must be a number between {2} and {1}")]
@@ -21,6 +21,7 @@ public class ProductDetailsViewModel
     [DataType(DataType.Date)]
     public DateTime OrderDate { get; set; }
 
+    [Display(Name = "Category")]
     public Category Category { get; set; } = default!;
     public int CategoryId { get; set; }
     public string Shelf { get; set; } = string.Empty;

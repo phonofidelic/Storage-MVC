@@ -7,22 +7,35 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Storage.Data;
 using Storage.Models.Entities;
+using Storage.Models.ViewModels;
+using Storage.Services;
 
 namespace Storage.Controllers
 {
     public class CategoriesController : Controller
     {
         private readonly StorageContext _context;
+        private readonly ICategoryService _categoryService;
 
-        public CategoriesController(StorageContext context)
+        public CategoriesController(
+            StorageContext context,
+            ICategoryService categoryService)
         {
             _context = context;
+            _categoryService = categoryService;
         }
 
         // GET: Categories
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Category.ToListAsync());
+            CategoryIndexViewModel viewModel = new()
+            {
+                Categories = await _context.Category
+                    .Include(c => c.Products)
+                    .Select(c => _categoryService.MapCategoryListItem(c))
+                    .ToListAsync()
+            };
+            return View(viewModel);
         }
 
         // GET: Categories/Details/5
@@ -40,7 +53,9 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            return View(category);
+            var viewModel = _categoryService.MapCategoryDetails(category);
+
+            return View(viewModel);
         }
 
         // GET: Categories/Create
@@ -54,15 +69,20 @@ namespace Storage.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description")] Category category)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description")] CategoryCreateViewModel categoryViewModel)
         {
             if (ModelState.IsValid)
             {
+                Category category = new()
+                {
+                    Name = categoryViewModel.Name,
+                    Description = categoryViewModel.Description
+                };
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(categoryViewModel);
         }
 
         // GET: Categories/Edit/5
@@ -78,7 +98,9 @@ namespace Storage.Controllers
             {
                 return NotFound();
             }
-            return View(category);
+
+            var viewModel = _categoryService.MapCategoryEdit(category);
+            return View(viewModel);
         }
 
         // POST: Categories/Edit/5
@@ -86,9 +108,9 @@ namespace Storage.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] CategoryEditViewModel categoryEditViewModel)
         {
-            if (id != category.Id)
+            if (id != categoryEditViewModel.Id)
             {
                 return NotFound();
             }
@@ -97,12 +119,18 @@ namespace Storage.Controllers
             {
                 try
                 {
+                    Category category = new ()
+                    {
+                        Id = categoryEditViewModel.Id,
+                        Name = categoryEditViewModel.Name,
+                        Description = categoryEditViewModel.Description
+                    };
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryExists(category.Id))
+                    if (!CategoryExists(categoryEditViewModel.Id))
                     {
                         return NotFound();
                     }
@@ -113,7 +141,7 @@ namespace Storage.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(categoryEditViewModel);
         }
 
         // GET: Categories/Delete/5
@@ -131,7 +159,9 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            return View(category);
+            var viewModel = _categoryService.MapCategoryDetails(category);
+
+            return View(viewModel);
         }
 
         // POST: Categories/Delete/5

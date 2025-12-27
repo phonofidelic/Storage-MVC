@@ -99,15 +99,15 @@ namespace Storage.Models
             _storageDbContext.SaveChanges();
         }
 
-        public async Task<IEnumerable<Product>> FilterProductsAsync(IEnumerable<int>? categoryIds)
+        public async Task<IEnumerable<Product>> FilterProductsAsync(IEnumerable<int>? categoryFilter)
         {
             var allProducts = await GetAllProductsAsync();
 
-            if (categoryIds == null || categoryIds.IsNullOrEmpty())
+            if (categoryFilter == null || categoryFilter.IsNullOrEmpty())
                 return allProducts;
 
 
-            return allProducts.Where(p => categoryIds.Contains(p.CategoryId));
+            return allProducts.Where(p => categoryFilter.Contains(p.CategoryId));
         }
 
         public async Task CreateAsync(ProductCreateDto product)

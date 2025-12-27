@@ -35,10 +35,10 @@ namespace Storage.Controllers
         }
 
         // GET: Products?filter=1&filter=2
-        public async Task<IActionResult> Index([FromQuery] IEnumerable<int>? filter)
+        public async Task<IActionResult> Index([FromQuery] IEnumerable<int>? categories)
         {
             var allCategories = await _categoryRepository.GetAllCategoriesAsync();
-            var filteredProducts = await _productRepository.FilterProductsAsync(filter);
+            var filteredProducts = await _productRepository.FilterProductsAsync(categories);
             
             var filteredProductsList = filteredProducts
                 .ToList()
@@ -48,8 +48,8 @@ namespace Storage.Controllers
             {
                 Products = filteredProductsList,
                 Count = filteredProductsList.Count(),
-                Categories = _categoryService.GetCategorySelects(allCategories, filter ?? []),
-                SelectedCategoryIds = filter
+                Categories = _categoryService.GetCategorySelects(allCategories, categories ?? []),
+                SelectedCategoryIds = categories
             };
             return View(viewModel);
         }

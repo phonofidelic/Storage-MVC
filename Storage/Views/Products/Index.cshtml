@@ -32,7 +32,33 @@
                         @Html.DisplayNameFor(model => model.Product.Name)
                     </th>
                     <th class="text-nowrap">
-                        @Html.DisplayNameFor(model => model.Product.Price)
+                        <div class="d-flex gap-2">
+                            @Html.DisplayNameFor(model => model.Product.Price)
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                </button>
+                                <div class="dropdown-menu">
+                                    <div class="d-flex flex-column gap-3 p-2">
+                                        <div>
+                                            <label for="min-price" class="form-label">Min price:</label>
+                                            <output for="min-price" id="min-price-output" aria-hidden="true"></output>
+                                            <input id="min-price" name="minPrice" type="range" value="@Model.MinPrice"
+                                                min="@Model.DefaultMinPrice" max="@Model.DefaultMaxPrice"
+                                                class="form-control">
+                                        </div>
+
+                                        <div>
+                                            <label for="max-price" class="form-label">Max price:</label>
+                                            <output for="max-price" id="max-price-output" aria-hidden="true"></output>
+                                            <input id="max-price" name="maxPrice" type="range" value="@Model.MaxPrice"
+                                                min="@Model.DefaultMinPrice" max="@Model.DefaultMaxPrice"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </th>
                     <th class="text-nowrap">
                         @Html.DisplayNameFor(model => model.Product.OrderDate)
@@ -44,10 +70,11 @@
                                 <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                 </button>
-                                <select size="3" name="categories" asp-for="SelectedCategoryIds"
-                                    asp-items="Model.Categories" class="form-select dropdown-menu"
-                                    aria-label="Category select">
-                                </select>
+                                <div class="dropdown-menu p-0">
+                                    <select size="3" name="categories" asp-for="SelectedCategoryIds"
+                                        asp-items="Model.Categories" class="form-select " aria-label="Category select">
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </th>
@@ -98,3 +125,22 @@
         </table>
     </div>
 </form>
+
+<script>
+    const formatCurrency = (value) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
+    const minPriceInput = document.getElementById("min-price");
+    const minPriceOutput = document.getElementById("min-price-output");
+    minPriceOutput.textContent = formatCurrency(minPriceInput.value);
+
+    minPriceInput.addEventListener('input', function () {
+        minPriceOutput.textContent = formatCurrency(this.value);
+    });
+
+    const maxPriceInput = document.getElementById("max-price");
+    const maxPriceOutput = document.getElementById("max-price-output");
+    maxPriceOutput.textContent = formatCurrency(maxPriceInput.value);
+
+    maxPriceInput.addEventListener('input', function () {
+        maxPriceOutput.textContent = formatCurrency(this.value);
+    });
+</script>

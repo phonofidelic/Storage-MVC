@@ -9,5 +9,9 @@ namespace Storage.Models.ViewModels
         public IEnumerable<int>? SelectedCategoryIds { get; set; } = [];
         public IEnumerable<ProductListItemViewModel> Products { get; set; } = [];
         public List<SelectListItem> Categories { get; set; } = [];
+        public int DefaultMinPrice { get; set; }
+        public int DefaultMaxPrice { get; set; }
+        public int MaxPrice { get; set; }
+        public int MinPrice { get; set; }
     }
 }

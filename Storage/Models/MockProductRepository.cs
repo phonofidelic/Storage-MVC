@@ -74,5 +74,20 @@ namespace Storage.Models
         {
             throw new NotImplementedException();
         }
+
+        public Task<int> GetMaxPrice()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> GetMinPrice()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Product>> FilterProductsAsync(int minPrice, int MaxPrice, IEnumerable<int> categoryIds)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

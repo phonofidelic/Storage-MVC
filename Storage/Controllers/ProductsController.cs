@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
@@ -35,10 +36,18 @@ namespace Storage.Controllers
         }
 
         // GET: Products?filter=1&filter=2
-        public async Task<IActionResult> Index([FromQuery] IEnumerable<int>? categories)
+        public async Task<IActionResult> Index(
+            [FromQuery] IEnumerable<int> categories,
+            [FromQuery] int? minPrice,
+            [FromQuery] int? maxPrice)
         {
+            int defaultMinPrice = await _productRepository.GetMinPrice();
+            int defaultMaxPrice = await _productRepository.GetMaxPrice();
+            int minPriceOrDefault = minPrice ?? defaultMinPrice;
+            int maxPriceOrDefault = maxPrice ?? defaultMaxPrice;
+
             var allCategories = await _categoryRepository.GetAllCategoriesAsync();
-            var filteredProducts = await _productRepository.FilterProductsAsync(categories);
+            var filteredProducts = await _productRepository.FilterProductsAsync(minPriceOrDefault, maxPriceOrDefault, categories);
             
             var filteredProductsList = filteredProducts
                 .ToList()
@@ -49,7 +58,11 @@ namespace Storage.Controllers
                 Products = filteredProductsList,
                 Count = filteredProductsList.Count(),
                 Categories = _categoryService.GetCategorySelects(allCategories, categories ?? []),
-                SelectedCategoryIds = categories
+                SelectedCategoryIds = categories,
+                DefaultMinPrice = defaultMinPrice,
+                DefaultMaxPrice = defaultMaxPrice,
+                MinPrice = minPriceOrDefault,
+                MaxPrice = maxPriceOrDefault
             };
             return View(viewModel);
         }
@@ -249,8 +262,8 @@ namespace Storage.Controllers
         // GET: Products/Summary
         public async Task<IActionResult> Summary()
         {
-            var allProducts = await _productRepository.FilterProductsAsync([]);
-            var productSummaries = allProducts.Select(p => _productService.GetProductSummary(p));
+            var allProducts = _productRepository.AllProducts;
+            var productSummaries = allProducts.Select(_productService.GetProductSummary);
 
             ProductSummaryViewModel viewModel = new()
             {

@@ -99,15 +99,23 @@ namespace Storage.Models
             _storageDbContext.SaveChanges();
         }
 
-        public async Task<IEnumerable<Product>> FilterProductsAsync(IEnumerable<int>? categoryFilter)
+        public async Task<IEnumerable<Product>> FilterProductsAsync(
+            int minPrice,
+            int maxPrice,
+            IEnumerable<int> categoryFilter)
         {
-            var allProducts = await GetAllProductsAsync();
+            var filteredProducts = await GetAllProductsAsync();
 
-            if (categoryFilter == null || categoryFilter.IsNullOrEmpty())
-                return allProducts;
+            if (categoryFilter.Count() > 0)
+            {
+                filteredProducts = filteredProducts.Where(p => categoryFilter.Contains(p.CategoryId));
+            }
 
+            filteredProducts = filteredProducts
+                .Where(p => p.Price >= minPrice)
+                .Where(p => p.Price <= maxPrice);
 
-            return allProducts.Where(p => categoryFilter.Contains(p.CategoryId));
+            return filteredProducts;
         }
 
         public async Task CreateAsync(ProductCreateDto product)
@@ -124,6 +132,16 @@ namespace Storage.Models
             });
 
             await _storageDbContext.SaveChangesAsync();
+        }
+
+        public Task<int> GetMaxPrice()
+        {
+            return _storageDbContext.Product.MaxAsync(p => p.Price);
+        }
+
+        public Task<int> GetMinPrice()
+        {
+            return _storageDbContext.Product.MinAsync(p => p.Price);
         }
     }
 }

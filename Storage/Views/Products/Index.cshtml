@@ -2,23 +2,60 @@
 
 @{
     ViewData["Title"] = "Products";
+
+    IEnumerable<int> removeCategory(int categoryId)
+    {
+        return Model.SelectedCategoryIds.Where(c => c != categoryId);
+    }
 }
 <form method="get" asp-controller="Products" asp-action="Index">
     <header class="position-fixed bg-body p-3 pb-0 d-flex w-100 align-items-center z-1 overflow-hidden left-0 right-0"
         style="top: 57px;">
         <div class="d-flex w-100 bg-body z-2">
             <h1 class="text-nowrap">Products (@Model.Count)</h1>
-            <div class="d-flex w-100 align-items-center px-2">
+            <div class="d-flex gap-2 w-100 align-items-center px-2">
                 <p class="m-0 p-2">
-                    <a asp-action="Create">Create New</a>
+                    <a asp-action="Create" class="btn btn-primary text-nowrap">Create New</a>
                 </p>
-                <button class="btn btn-secondary btn ms-2" type="submit">Apply</button>
-                @if (Model.SelectedCategoryIds?.Count() > 0)
-                {
-                    <p class="m-0">
-                        <a asp-action="Index">Clear filter</a>
-                    </p>
-                }
+                <div class="d-flex flex-wrap gap-2">
+                    @if (
+                                        Model.MinPrice != Model.DefaultMinPrice ||
+                                        Model.MaxPrice != Model.DefaultMaxPrice ||
+                                        Model.SelectedCategoryIds?.Count() > 0)
+                    {
+                        <p class="m-0 text-nowrap">
+                            <a asp-action="Index">Clear filter</a>
+                        </p>
+                    }
+                    @if (Model.MinPrice > Model.DefaultMinPrice)
+                    {
+                        <span class="badge rounded-pill text-bg-secondary">
+                            <a asp-route-maxPrice="@Model.MaxPrice" asp-route-categories="@Model.SelectedCategoryIds"
+                                class="btn-close me-1"></a>
+                            min price:
+                            @Model.MinPrice.ToString("C2")
+                        </span>
+                    }
+                    @if (Model.MaxPrice < Model.DefaultMaxPrice)
+                    {
+                        <span class="badge rounded-pill text-bg-secondary">
+                            <a asp-route-minPrice="@Model.MinPrice" asp-route-categories="@Model.SelectedCategoryIds"
+                                class="btn-close me-1"></a>
+                            max price:
+                            @Model.MaxPrice.ToString("C2")
+                        </span>
+                    }
+                    @foreach (var category in Model.SelectedCategories)
+                    {
+                        <span class="badge rounded-pill text-bg-secondary">
+                            <a asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice"
+                                class="btn-close me-1"></a>
+                            category:
+                            @category.Name
+                        </span>
+                    }
+                </div>
+
             </div>
         </div>
     </header>
@@ -55,6 +92,7 @@
                                                 min="@Model.DefaultMinPrice" max="@Model.DefaultMaxPrice"
                                                 class="form-control">
                                         </div>
+                                        <button class="btn btn-sm btn-outline-primary btn" type="submit">Apply</button>
                                     </div>
                                 </div>
                             </div>
@@ -71,9 +109,13 @@
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                 </button>
                                 <div class="dropdown-menu p-0">
-                                    <select size="3" name="categories" asp-for="SelectedCategoryIds"
-                                        asp-items="Model.Categories" class="form-select " aria-label="Category select">
-                                    </select>
+                                    <div class="d-flex flex-column gap-3 p-2">
+                                        <select size="3" name="categories" asp-for="SelectedCategoryIds"
+                                            asp-items="Model.Categories" class="form-select rounded-0"
+                                            aria-label="Category select">
+                                        </select>
+                                        <button class="btn btn-sm btn-outline-primary btn" type="submit">Apply</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

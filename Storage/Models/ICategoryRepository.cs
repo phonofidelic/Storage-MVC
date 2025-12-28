@@ -7,6 +7,8 @@ namespace Storage.Models
         Task<IEnumerable<Category>> GetAllCategoriesAsync();
 
         Task<Category?> GetCategoryByIdAsync(int categoryId);
+
+        Task<IEnumerable<Category>> GetCategoriesByIdAsync(IEnumerable<int> ids);
     }
 
 }

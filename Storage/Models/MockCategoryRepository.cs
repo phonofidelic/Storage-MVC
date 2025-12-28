@@ -19,6 +19,11 @@ public class MockCategoryRepository : ICategoryRepository
         throw new NotImplementedException();
     }
 
+    public Task<IEnumerable<Category>> GetCategoriesByIdAsync(IEnumerable<int> ids)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<Category?> GetCategoryByIdAsync(int categoryId)
     {
         throw new NotImplementedException();

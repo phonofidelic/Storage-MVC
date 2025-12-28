@@ -18,6 +18,11 @@ namespace Storage.Models
             return await _storageContext.Category.Include(c => c.Products).ToListAsync();
         }
 
+        public async Task<IEnumerable<Category>> GetCategoriesByIdAsync(IEnumerable<int> ids)
+        {
+            return await _storageContext.Category.Where(c => ids.Contains(c.Id)).ToListAsync();
+        }
+
         public async Task<Category?> GetCategoryByIdAsync(int categoryId)
         {
             return await _storageContext.FindAsync<Category>(categoryId);

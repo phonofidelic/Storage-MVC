@@ -39,7 +39,9 @@ namespace Storage.Controllers
         public async Task<IActionResult> Index(
             [FromQuery] IEnumerable<int> categories,
             [FromQuery] int? minPrice,
-            [FromQuery] int? maxPrice)
+            [FromQuery] int? maxPrice,
+            [FromQuery] ProductSortBy sort = ProductSortBy.Name,
+            [FromQuery] SortOrder order = SortOrder.Ascending)
         {
             int defaultMinPrice = await _productRepository.GetMinPrice();
             int defaultMaxPrice = await _productRepository.GetMaxPrice();
@@ -47,23 +49,68 @@ namespace Storage.Controllers
             int maxPriceOrDefault = maxPrice ?? defaultMaxPrice;
 
             var allCategories = await _categoryRepository.GetAllCategoriesAsync();
-            var filteredProducts = await _productRepository.FilterProductsAsync(minPriceOrDefault, maxPriceOrDefault, categories);
-            
-            var filteredProductsList = filteredProducts
+            IEnumerable<Product> filteredProducts = await _productRepository.FilterProductsAsync(minPriceOrDefault, maxPriceOrDefault, categories);
+
+            switch(sort)
+            {
+                case ProductSortBy.Name:
+                    filteredProducts = order == SortOrder.Ascending ? 
+                        filteredProducts.OrderBy(p => p.Name) : 
+                        filteredProducts.OrderByDescending(p => p.Name);
+                    break;
+
+                case ProductSortBy.Price:
+                    filteredProducts = order == SortOrder.Ascending ? 
+                        filteredProducts.OrderBy(p => p.Price) :
+                        filteredProducts.OrderByDescending(p => p.Price);
+                    break;
+
+                case ProductSortBy.OrderDate:
+                    filteredProducts = order == SortOrder.Ascending ? 
+                        filteredProducts.OrderBy(p => p.OrderDate) :
+                        filteredProducts.OrderByDescending(p => p.OrderDate);
+                    break;
+
+                case ProductSortBy.Category:
+                    filteredProducts = order == SortOrder.Ascending ? 
+                        filteredProducts.OrderBy(p => p.Category.Name) :
+                        filteredProducts.OrderByDescending(p => p.Category.Name);
+                    break;
+
+                case ProductSortBy.Shelf:
+                    filteredProducts = order == SortOrder.Ascending ? 
+                        filteredProducts.OrderBy(p => p.Shelf) :
+                        filteredProducts.OrderByDescending(p => p.Shelf);
+                    break;
+
+                case ProductSortBy.Count:
+                    filteredProducts = order == SortOrder.Ascending ? 
+                        filteredProducts.OrderBy(p => p.Count) :
+                        filteredProducts.OrderByDescending(p => p.Count);
+                    break;
+
+                default:
+                filteredProducts = filteredProducts.OrderBy(p => p.Name);
+                    break;
+            }
+
+            IEnumerable<ProductListItemViewModel> productListItems = filteredProducts
                 .ToList()
                 .Select(_productService.MapProductListItem);
 
             ProductIndexViewModel viewModel = new()
             {
-                Products = filteredProductsList,
-                Count = filteredProductsList.Count(),
+                Products = productListItems,
+                Count = productListItems.Count(),
                 Categories = _categoryService.GetCategorySelects(allCategories, categories ?? []),
                 SelectedCategoryIds = categories ?? [],
                 SelectedCategories = await _categoryRepository.GetCategoriesByIdAsync(categories ?? []),
                 DefaultMinPrice = defaultMinPrice,
                 DefaultMaxPrice = defaultMaxPrice,
                 MinPrice = minPriceOrDefault,
-                MaxPrice = maxPriceOrDefault
+                MaxPrice = maxPriceOrDefault,
+                SortBy = sort,
+                SortOrder = order
             };
             return View(viewModel);
         }

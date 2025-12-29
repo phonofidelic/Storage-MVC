@@ -20,5 +20,9 @@ namespace Storage.Models.ViewModels
 
         [DataType(DataType.Currency)]
         public int MinPrice { get; set; }
+
+        public ProductSortBy SortBy { get; set; }
+
+        public SortOrder SortOrder { get; set; }
     }
 }

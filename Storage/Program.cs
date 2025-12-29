@@ -6,6 +6,11 @@ using Storage.Models;
 using Storage.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+var connection = String.Empty;
+if (builder.Environment.IsDevelopment())
+{
+    
+}
 builder.Services.AddDbContext<StorageContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("StorageContext") ?? throw new InvalidOperationException("Connection string 'StorageContext' not found.")));
 

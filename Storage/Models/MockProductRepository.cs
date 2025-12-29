@@ -85,7 +85,7 @@ namespace Storage.Models
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Product>> FilterProductsAsync(int minPrice, int MaxPrice, IEnumerable<int> categoryIds)
+        public Task<IEnumerable<Product>> FilterProductsAsync(int? minPrice, int? MaxPrice, IEnumerable<int>? categoryIds, DateTime? minOrderDate, DateTime? maxOrderDate)
         {
             throw new NotImplementedException();
         }

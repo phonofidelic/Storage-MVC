@@ -40,8 +40,11 @@ namespace Storage.Controllers
             [FromQuery] IEnumerable<int> categories,
             [FromQuery] int? minPrice,
             [FromQuery] int? maxPrice,
+            [FromQuery] DateTime? minOrderDate,
+            [FromQuery] DateTime? maxOrderDate,
             [FromQuery] ProductSortBy sort = ProductSortBy.Name,
-            [FromQuery] SortOrder order = SortOrder.Ascending)
+            [FromQuery] SortOrder order = SortOrder.Ascending
+            )
         {
             int defaultMinPrice = await _productRepository.GetMinPrice();
             int defaultMaxPrice = await _productRepository.GetMaxPrice();
@@ -49,7 +52,13 @@ namespace Storage.Controllers
             int maxPriceOrDefault = maxPrice ?? defaultMaxPrice;
 
             var allCategories = await _categoryRepository.GetAllCategoriesAsync();
-            IEnumerable<Product> filteredProducts = await _productRepository.FilterProductsAsync(minPriceOrDefault, maxPriceOrDefault, categories);
+            IEnumerable<Product> filteredProducts = 
+                await _productRepository.FilterProductsAsync(
+                    minPriceOrDefault, 
+                    maxPriceOrDefault, 
+                    categories, 
+                    minOrderDate, 
+                    maxOrderDate);
 
             switch(sort)
             {
@@ -109,6 +118,8 @@ namespace Storage.Controllers
                 DefaultMaxPrice = defaultMaxPrice,
                 MinPrice = minPriceOrDefault,
                 MaxPrice = maxPriceOrDefault,
+                MinOrderDate = minOrderDate,
+                MaxOrderDate = maxOrderDate,
                 SortBy = sort,
                 SortOrder = order
             };

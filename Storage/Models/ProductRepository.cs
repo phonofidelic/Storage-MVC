@@ -100,15 +100,27 @@ namespace Storage.Models
         }
 
         public async Task<IEnumerable<Product>> FilterProductsAsync(
-            int minPrice,
-            int maxPrice,
-            IEnumerable<int> categoryFilter)
+            int? minPrice,
+            int? maxPrice,
+            IEnumerable<int>? categoryFilter,
+            DateTime? minOrderDate, 
+            DateTime? maxOrderDate)
         {
             var filteredProducts = await GetAllProductsAsync();
 
-            if (categoryFilter.Count() > 0)
+            if (categoryFilter?.Count() > 0)
             {
                 filteredProducts = filteredProducts.Where(p => categoryFilter.Contains(p.CategoryId));
+            }
+
+            if (minOrderDate != null)
+            {
+                filteredProducts = filteredProducts.Where(p => p.OrderDate >= minOrderDate);
+            }
+
+            if (maxOrderDate != null)
+            {
+                filteredProducts = filteredProducts.Where(p => p.OrderDate <= maxOrderDate);
             }
 
             filteredProducts = filteredProducts

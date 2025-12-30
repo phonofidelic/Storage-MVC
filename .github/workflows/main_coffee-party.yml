@@ -29,6 +29,19 @@ jobs:
       - name: dotnet publish
         run: dotnet publish -c Release --property:PublishDir="${{env.DOTNET_ROOT}}/Storage"
 
+        # Source - https://stackoverflow.com/a/60913464
+        # Posted by Mahi, modified by community. See post 'Timeline' for change history
+        # Retrieved 2025-12-30, License - CC BY-SA 4.0
+
+        #substitute production appsettings entries to appsettings json file
+      - name: App Settings Variable Substitution
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: '${{env.DOTNET_ROOT}}/Storage/appsettings.json'
+        env:
+          ConnectionStrings.StorageContext: ${{ secrets.STORAGECONTEXT }}
+          App.ServerRootAddress: ${{ env.SERVER_ROOT_ADDRESS }}
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -54,20 +67,6 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A108B3FD3DD043F285C23527C1CBE210 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D320110445FD4D44BDB4B5E6726B55F8 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3D5F102B79BE427B88B6C61B2CAAC5F0 }}
-
-          # Source - https://stackoverflow.com/a
-# Posted by Mahi, modified by community. See post 'Timeline' for change history
-# Retrieved 2025-12-30, License - CC BY-SA 4.0
-
-#substitute production appsettings entries to appsettings json file
-      - name: App Settings Variable Substitution
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: '${{env.DOTNET_ROOT}}/Storage/appsettings.json'
-        env:
-          ConnectionStrings.StorageContext: ${{ secrets.STORAGECONTEXT }}
-          App.ServerRootAddress: ${{ env.SERVER_ROOT_ADDRESS }}
-
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp

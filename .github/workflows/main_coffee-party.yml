@@ -109,13 +109,13 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Run MSBuild
-      run: msbuild .\SampleWebApplication.sln
+      run: msbuild .\Storage.sln
        
     - name: 'Run Azure webapp deploy action using Azure Credentials'
       uses: azure/webapps-deploy@v3
       with: 
         app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
-        package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/SampleWebApplication/'
+        package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/Storage/'
   
     # Azure logout 
     - name: logout

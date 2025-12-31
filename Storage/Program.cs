@@ -6,8 +6,12 @@ using Storage.Models;
 using Storage.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+string? connectionString = System.Environment.GetEnvironmentVariable("SQLCONNSTR_StorageContext")
+    ?? builder.Configuration.GetConnectionString("StorageContext");
+
 builder.Services.AddDbContext<StorageContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("StorageContext") ?? throw new InvalidOperationException("Connection string 'StorageContext' not found.")));
+    options.UseSqlServer(connectionString ?? throw new InvalidOperationException("Connection string 'StorageContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddSingleton<MockDb>();

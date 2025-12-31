@@ -87,7 +87,7 @@ defaults:
 
 env:
   AZURE_WEBAPP_NAME: coffee-party    # Set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: '../../.'      # Set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_PACKAGE_PATH: '../../'      # Set this to the path to your web app project, defaults to the repository root
   NUGET_VERSION: '7.0.x'           # Set this to the dot net version to use
 
 jobs:
@@ -119,7 +119,7 @@ jobs:
       uses: azure/webapps-deploy@v3
       with: 
         app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
-        package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/Storage/'
+        package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}Storage/'
   
     # Azure logout 
     - name: logout

@@ -1,84 +1,4 @@
-# # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# # More GitHub Actions for Azure: https://github.com/Azure/actions
-
-# name: Build and deploy ASP.Net Core app to Azure Web App - coffee-party
-
-# on:
-#   push:
-#     branches:
-#       - main
-#   workflow_dispatch:
-
-# jobs:
-#   build:
-#     runs-on: windows-latest
-#     permissions:
-#       contents: read #This is required for actions/checkout
-
-#     steps:
-#       - uses: actions/checkout@v4
-
-#       - name: Set up .NET Core
-#         uses: actions/setup-dotnet@v4
-#         with:
-#           dotnet-version: '10.0.x'
-
-#       - name: Build with dotnet
-#         run: dotnet build --configuration Release
-
-#       - name: dotnet publish
-#         run: dotnet publish -c Release --property:PublishDir="${{env.DOTNET_ROOT}}\Storage"
-
-#       # Source - https://stackoverflow.com/a/60913464
-#         # Posted by Mahi, modified by community. See post 'Timeline' for change history
-#         # Retrieved 2025-12-30, License - CC BY-SA 4.0
-
-#         #substitute production appsettings entries to appsettings json file
-#       - name: App Settings Variable Substitution
-#         uses: microsoft/variable-substitution@v1
-#         with:
-#           files: '${{env.DOTNET_ROOT}}\Storage\appsettings.json'
-#         env:
-#           ConnectionStrings.StorageContext: ${{ secrets.STORAGECONTEXT }}
-#           App.ServerRootAddress: ${{ env.SERVER_ROOT_ADDRESS }}
-
-#       - name: Upload artifact for deployment job
-#         uses: actions/upload-artifact@v4
-#         with:
-#           name: .net-app
-#           path: ${{env.DOTNET_ROOT}}\Storage
-
-#   deploy:
-#     runs-on: windows-latest
-#     needs: build
-#     permissions:
-#       id-token: write #This is required for requesting the JWT
-#       contents: read #This is required for actions/checkout
-
-#     steps:
-#       - name: Download artifact from build job
-#         uses: actions/download-artifact@v4
-#         with:
-#           name: .net-app
-      
-#       - name: Login to Azure
-#         uses: azure/login@v2
-#         with:
-#           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A108B3FD3DD043F285C23527C1CBE210 }}
-#           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D320110445FD4D44BDB4B5E6726B55F8 }}
-#           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3D5F102B79BE427B88B6C61B2CAAC5F0 }}
-
-#       - name: Deploy to Azure Web App
-#         id: deploy-to-webapp
-#         uses: azure/webapps-deploy@v3
-#         with:
-#           app-name: 'coffee-party'
-#           slot-name: 'Production'
-#           package: .
-          
-
-# From: 
-# How To Deploy Your .NET Application To Azure Using GitHub Actions (2025)
+# From: How To Deploy Your .NET Application To Azure Using GitHub Actions (2025)
 # https://www.youtube.com/watch?v=6qPzeB0dN9o
 name: Build and Deploy ASP.NET MVC App to Azure Web App
 
@@ -89,10 +9,9 @@ on:
       - main
 
 env:
-  AZURE_WEBAPP_NAME: coffee-party-app    # Set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: './Storage/publish'      # Set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_NAME: coffee-party-app
+  AZURE_WEBAPP_PACKAGE_PATH: './Storage/publish' 
   DOTNET_VERSION: '10.0.X'
-  NUGET_VERSION: '7.0.x'
   SOLUTION_PATH: 'Storage.slnx'
   MVC_PROJECT_PATH: 'Storage/Storage.csproj'
   PUBLISH_DIR: './publish'
@@ -116,7 +35,7 @@ jobs:
       - name: Build
         run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore
 
-        # ToDo: run tests
+      # ToDo: run tests
       # - name: Test
       #   run: dotnet test ${{ env.SOLUTION_PATH }} --configuration Release --no-restore --no-build --verbosity normal
 

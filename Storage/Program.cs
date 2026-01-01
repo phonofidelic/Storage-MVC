@@ -7,9 +7,6 @@ using Storage.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// string? connectionString = System.Environment.GetEnvironmentVariable("SQLCONNSTR_StorageContext")
-//     ?? builder.Configuration.GetConnectionString("StorageContext");
-
 builder.Services.AddDbContext<StorageContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("StorageContext") ?? throw new InvalidOperationException("Connection string 'StorageContext' not found.")));
 
@@ -32,6 +29,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// Apply migrations when starting with a fresh DB
+// ToDo: Apply migrations in workflow before `deploy` job
 // using(var scope = app.Services.CreateScope())
 // {
 //     var db = scope.ServiceProvider.GetRequiredService<StorageContext>();

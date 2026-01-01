@@ -10,13 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 // string? connectionString = System.Environment.GetEnvironmentVariable("SQLCONNSTR_StorageContext")
 //     ?? builder.Configuration.GetConnectionString("StorageContext");
 
-// builder.Services.AddDbContext<StorageContext>(options =>
-//     options.UseSqlServer(connectionString ?? throw new InvalidOperationException("Connection string 'StorageContext' not found.")));
+builder.Services.AddDbContext<StorageContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("StorageContext") ?? throw new InvalidOperationException("Connection string 'StorageContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddSingleton<MockDb>();
-builder.Services.AddScoped<IProductRepository, MockProductRepository>();
-builder.Services.AddScoped<ICategoryRepository, MockCategoryRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
@@ -50,6 +50,6 @@ app.MapControllerRoute(
     pattern: "{controller=Products}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-// DbInitializer.Seed(app);
+DbInitializer.Seed(app);
 
 app.Run();

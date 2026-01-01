@@ -16,7 +16,6 @@ namespace Storage.Controllers
         private readonly IProductService _productService;
         private readonly ICategoryRepository _categoryRepository;
         private readonly ICategoryService _categoryService;
-        private readonly IImageRepository _imageRepository;
         private readonly ILogger<ProductsController> _logger;
 
         public ProductsController(
@@ -24,14 +23,12 @@ namespace Storage.Controllers
             IProductService productService,
             ICategoryRepository categoryRepository,
             ICategoryService categoryService,
-            IImageRepository imageRepository,
             ILogger<ProductsController> logger)
         {
             _productRepository = productRepository;
             _productService = productService;
             _categoryRepository = categoryRepository;
             _categoryService = categoryService;
-            _imageRepository = imageRepository;
             _logger = logger;
         }
 

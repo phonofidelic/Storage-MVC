@@ -9,7 +9,7 @@ namespace Storage.Models
     {
         IEnumerable<Product> AllProducts { get; }
         Task<Product?> GetProductByIdAsync(int? productId);
-        Task<IEnumerable<Product>> FilterProductsAsync(int? minPrice, int? MaxPrice, IEnumerable<int>? categoryIds, DateTime? minOrderDate, DateTime? maxOrderDate);
+        Task<IEnumerable<Product>> FilterProductsAsync(int? minPrice, int? maxPrice, IEnumerable<int>? categoryIds, DateTime? minOrderDate, DateTime? maxOrderDate);
         Task CreateAsync(ProductCreateDto product);
         Task UpdateAsync(ProductEditDto product);
         void Delete(int Id);

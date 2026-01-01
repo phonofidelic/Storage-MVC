@@ -14,18 +14,18 @@ public class MockCategoryRepository : ICategoryRepository
     }
     public IEnumerable<Category> AllCategories => _mockDb.Categories;
 
-    public Task<IEnumerable<Category>> GetAllCategoriesAsync()
+    public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
     {
-        throw new NotImplementedException();
+        return _mockDb.Categories.ToList();
     }
 
-    public Task<IEnumerable<Category>> GetCategoriesByIdAsync(IEnumerable<int> ids)
+    public async Task<IEnumerable<Category>> GetCategoriesByIdAsync(IEnumerable<int> ids)
     {
-        throw new NotImplementedException();
+        return _mockDb.Categories.Where(c => ids.Contains(c.Id));
     }
 
-    public Task<Category?> GetCategoryByIdAsync(int categoryId)
+    public async Task<Category?> GetCategoryByIdAsync(int categoryId)
     {
-        throw new NotImplementedException();
+        return _mockDb.Categories.First(c => c.Id == categoryId);
     }
 }

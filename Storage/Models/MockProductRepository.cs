@@ -59,15 +59,9 @@ namespace Storage.Models
             throw new NotImplementedException();
         }
 
-
-        public Task<IEnumerable<Product>> FilterProductsAsync(IEnumerable<int>? categoryIds)
+        public async Task<Product?> GetProductByIdAsync(int? productId)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Product?> GetProductByIdAsync(int? productId)
-        {
-            throw new NotImplementedException();
+            return _mockDb.Products.First(p => p.Id == productId);
         }
 
         public Task CreateAsync(ProductCreateDto product)
@@ -75,19 +69,41 @@ namespace Storage.Models
             throw new NotImplementedException();
         }
 
-        public Task<int> GetMaxPrice()
+        public async Task<int> GetMaxPrice()
         {
-            throw new NotImplementedException();
+            return _mockDb.Products.Max(p => p.Price);
         }
 
-        public Task<int> GetMinPrice()
+        public async Task<int> GetMinPrice()
         {
-            throw new NotImplementedException();
+            return _mockDb.Products.Min(p => p.Price);
         }
 
-        public Task<IEnumerable<Product>> FilterProductsAsync(int? minPrice, int? MaxPrice, IEnumerable<int>? categoryIds, DateTime? minOrderDate, DateTime? maxOrderDate)
+        public async Task<IEnumerable<Product>> FilterProductsAsync(
+            int? minPrice, 
+            int? maxPrice, 
+            IEnumerable<int>? categoryIds, 
+            DateTime? minOrderDate, 
+            DateTime? maxOrderDate)
         {
-            throw new NotImplementedException();
+            var products = _mockDb.Products;
+
+            if (minPrice > 0)
+                products = products.Where(p => p.Price >= minPrice);
+
+            if (maxPrice > 0)
+                products = products.Where(p => p.Price <= maxPrice);
+
+            if (categoryIds?.Count() > 0)
+                products = products.Where(p => categoryIds.Contains(p.Id));
+
+            if (minOrderDate != null)
+                products = products.Where(p => p.OrderDate >= minOrderDate);
+
+            if (maxOrderDate != null)
+                products = products.Where(p => p.OrderDate <= maxOrderDate);
+
+            return products;
         }
     }
 }

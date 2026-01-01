@@ -90,11 +90,11 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: coffee-party    # Set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: './publish'      # Set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_PACKAGE_PATH: './Storage/publish'      # Set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '10.0.X'
   NUGET_VERSION: '7.0.x'
   SOLUTION_PATH: 'Storage.slnx'
-  MVC_PROJECT_PATH: '.'
+  MVC_PROJECT_PATH: 'Storage/Storage.csproj'
   PUBLISH_DIR: './publish'
 
 jobs:

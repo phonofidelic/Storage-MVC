@@ -77,51 +77,75 @@
 #           package: .
           
 
-name: Deploy ASP.NET MVC App deploy to Azure Web App
+# From: 
+# How To Deploy Your .NET Application To Azure Using GitHub Actions (2025)
+# https://www.youtube.com/watch?v=6qPzeB0dN9o
+name: Build and Deploy ASP.NET MVC App to Azure Web App
 
-on: [push]
-
-defaults:
-  run:
-    working-directory: '.'
+on: 
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 env:
   AZURE_WEBAPP_NAME: coffee-party    # Set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: '../../'      # Set this to the path to your web app project, defaults to the repository root
-  NUGET_VERSION: '7.0.x'           # Set this to the dot net version to use
+  AZURE_WEBAPP_PACKAGE_PATH: './Storage/publish'      # Set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: '10.0.X'
+  NUGET_VERSION: '7.0.x'
+  SOLUTION_PATH: 'Storage.slnx'
+  MVC_PROJECT_PATH: 'Storage'
+  PUBLISH_DIR: './publish'
 
 jobs:
-  build-and-deploy:
-    runs-on: windows-latest
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
     steps:
+      - uses: actions/checkout@v4
 
-    # Check out the repo
-    - uses: actions/checkout@main
-    
-    - uses: azure/login@v2
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: Install Nuget
-      uses: nuget/setup-nuget@v1
-      with:
-        nuget-version: ${{ env.NUGET_VERSION}}
-    - name: NuGet to restore dependencies as well as project-specific tools that are specified in the project file
-      run: nuget restore
-  
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
+      - name: Restore
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
 
-    - name: Run MSBuild
-      run: msbuild .\Storage.slnx
-       
-    - name: 'Run Azure webapp deploy action using Azure Credentials'
-      uses: azure/webapps-deploy@v3
-      with: 
-        app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
-        package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}Storage/'
-  
-    # Azure logout 
-    - name: logout
-      run: |
-        az logout
+      - name: Build
+        run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore
+
+        # ToDo: run tests
+      # - name: Test
+      #   run: dotnet test ${{ env.SOLUTION_PATH }} --configuration Release --no-restore --no-build --verbosity normal
+
+      - name: Publish
+        run: dotnet publish ${{ env.MVC_PROJECT_PATH}} --configuration Release --no-restore --no-build --property:PublishDir=${{ env.PUBLISH_DIR }}
+
+      - name: Publish Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: webapp
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      # ToDo: apply migrations here?
+
+  deploy:
+    name: Deploy to Azure
+    runs-on: ubuntu-latest
+    needs: [build-and-test]
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: webapp
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      - name: Deploy
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{ env. AZURE_WEBAPP_PACKAGE_PATH}}

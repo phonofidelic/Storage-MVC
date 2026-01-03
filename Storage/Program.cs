@@ -1,9 +1,14 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Globalization;
+using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Storage.Data;
 using Storage.Models;
 using Storage.Services;
+
+System.Globalization.CultureInfo systemCulture = new("sv-SE");
+CultureInfo.DefaultThreadCurrentCulture = systemCulture;
+CultureInfo.DefaultThreadCurrentUICulture = systemCulture;
 
 var builder = WebApplication.CreateBuilder(args);
 

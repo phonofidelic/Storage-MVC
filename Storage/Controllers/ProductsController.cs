@@ -35,6 +35,7 @@ namespace Storage.Controllers
         // GET: Products?filter=1&filter=2
         public async Task<IActionResult> Index(
             [FromQuery] IEnumerable<int> categories,
+            [FromQuery] int? removeCategory,
             [FromQuery] int? minPrice,
             [FromQuery] int? maxPrice,
             [FromQuery] DateTime? minOrderDate,
@@ -43,6 +44,8 @@ namespace Storage.Controllers
             [FromQuery] SortOrder order = SortOrder.Ascending
             )
         {
+            IEnumerable<int> selectedCategoryIds = categories.ToList().Where(c => c != removeCategory) ?? [];
+
             int defaultMinPrice = await _productRepository.GetMinPrice();
             int defaultMaxPrice = await _productRepository.GetMaxPrice();
             int minPriceOrDefault = minPrice ?? defaultMinPrice;
@@ -53,7 +56,7 @@ namespace Storage.Controllers
                 await _productRepository.FilterProductsAsync(
                     minPriceOrDefault, 
                     maxPriceOrDefault, 
-                    categories, 
+                    selectedCategoryIds, 
                     minOrderDate, 
                     maxOrderDate);
 
@@ -108,9 +111,9 @@ namespace Storage.Controllers
             {
                 Products = productListItems,
                 Count = productListItems.Count(),
-                Categories = _categoryService.GetCategorySelects(allCategories, categories ?? []),
-                SelectedCategoryIds = categories ?? [],
-                SelectedCategories = await _categoryRepository.GetCategoriesByIdAsync(categories ?? []),
+                Categories = _categoryService.GetCategorySelects(allCategories, selectedCategoryIds),
+                SelectedCategoryIds = selectedCategoryIds,
+                SelectedCategories = await _categoryRepository.GetCategoriesByIdAsync(selectedCategoryIds),
                 DefaultMinPrice = defaultMinPrice,
                 DefaultMaxPrice = defaultMaxPrice,
                 MinPrice = minPriceOrDefault,

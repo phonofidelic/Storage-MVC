@@ -6,7 +6,8 @@ using Storage.Data;
 using Storage.Models;
 using Storage.Services;
 
-System.Globalization.CultureInfo systemCulture = new("sv-SE");
+// Set system culture to sv-SE
+CultureInfo systemCulture = new("sv-SE");
 CultureInfo.DefaultThreadCurrentCulture = systemCulture;
 CultureInfo.DefaultThreadCurrentUICulture = systemCulture;
 

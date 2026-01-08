@@ -13,7 +13,7 @@ namespace Storage.Models.ViewModels
         public int Count { get; set; }
         public IEnumerable<int> SelectedCategoryIds { get; set; } = [];
 
-        [Display(Name = "categories")]
+        [Display(Name = "category")]
         public IEnumerable<Category> SelectedCategories { get; set; } = [];
         public IEnumerable<ProductListItemViewModel> Products { get; set; } = [];
         public List<SelectListItem> Categories { get; set; } = [];

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Storage.Core.Entities
 {
-    internal class Product : BaseEntity
+    public class Product : BaseEntity
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;

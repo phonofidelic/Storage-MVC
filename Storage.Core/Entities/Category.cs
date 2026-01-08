@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Storage.Core.Entities
 {
-    internal class Category : BaseEntity
+    public class Category : BaseEntity
     {
         public  int Id { get; set; }
         public string Name { get; set; } = string.Empty;

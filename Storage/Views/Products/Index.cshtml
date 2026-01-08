@@ -45,52 +45,48 @@
                 <div class="d-flex flex-wrap gap-2">
                     @if (Model.MinPrice > Model.DefaultMinPrice)
                     {
-                        <span class="badge rounded-pill text-bg-secondary">
-                            <a asp-route-maxPrice="@Model.MaxPrice" asp-route-minOrderDate="@Model.MinOrderDate"
-                                asp-route-maxOrderDate="@Model.MaxOrderDate"
-                                asp-route-categories="@Model.SelectedCategoryIds" class="btn-close me-1"></a>
+                        <button type="submit" name="minPrice" value=""
+                            class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
+                            <span class="btn-close me-1"></span>
                             @Html.DisplayNameFor(model => model.MinPrice):
                             @Html.DisplayFor(model => model.MinPrice)
-                        </span>
+                        </button>
                     }
                     @if (Model.MaxPrice < Model.DefaultMaxPrice)
                     {
-                        <span class="badge rounded-pill text-bg-secondary">
-                            <a asp-route-minPrice="@Model.MinPrice" asp-route-maxOrderDate="@Model.MaxOrderDate"
-                                asp-route-categories="@Model.SelectedCategoryIds" class="btn-close me-1"></a>
+                        <button type="submit" name="maxPrice" value=""
+                            class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
+                            <span class="btn-close me-1"></span>
                             @Html.DisplayNameFor(model => model.MaxPrice):
                             @Html.DisplayFor(model => model.MaxPrice)
-                        </span>
+                        </button>
                     }
                     @if (Model.MinOrderDate != null)
                     {
-                        <span class="badge rounded-pill text-bg-secondary">
-                            <a asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice"
-                                asp-route-categories="@Model.SelectedCategoryIds"
-                                asp-route-maxOrderDate="@Model.MaxOrderDate" class="btn-close me-1"></a>
+                        <button type="submit" name="minOrderDate" value=""
+                            class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
+                            <span class="btn-close me-1"></span>
                             @Html.DisplayNameFor(model => model.MinOrderDate):
                             @Html.DisplayFor(model => model.MinOrderDate)
-                        </span>
+                        </button>
                     }
                     @if (Model.MaxOrderDate != null)
                     {
-                        <span class="badge rounded-pill text-bg-secondary">
-                            <a asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice"
-                                asp-route-categories="@Model.SelectedCategoryIds"
-                                asp-route-minOrderDate="@Model.MinOrderDate" class="btn-close me-1"></a>
+                        <button type="submit" name="maxOrderDate" value=""
+                            class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
+                            <span class="btn-close me-1"></span>
                             @Html.DisplayNameFor(model => model.MaxOrderDate):
                             @Html.DisplayFor(model => model.MaxOrderDate)
-                        </span>
+                        </button>
                     }
                     @foreach (var category in Model.SelectedCategories)
                     {
-                        <span class="badge rounded-pill text-bg-secondary">
-                            <a asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice"
-                                asp-route-minOrderDate="@Model.MinOrderDate" asp-route-maxOrderDate="@Model.MaxOrderDate"
-                                class="btn-close me-1"></a>
+                        <button type="submit" name="removeCategory" value="@category.Id"
+                            class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
+                            <span class="btn-close me-1"></span>
                             @Html.DisplayNameFor(model => model.SelectedCategories):
-                            @Html.DisplayFor(model => model.SelectedCategories)
-                        </span>
+                            @category.Name
+                        </button>
                     }
                 </div>
 
@@ -105,20 +101,20 @@
                 <tr class="w-100 h-100">
                     <th class=" text-nowrap">
                         <div class="d-flex gap-2 align-items-center">
-                            <a asp-route-sort="@nameof(Model.Product.Name)"
-                                asp-route-order="@GetSortOrder(ProductSortBy.Name)" class="text-body">
+                            <a class="text-body" asp-route-sort="@nameof(Model.Product.Name)"
+                                asp-route-order="@GetSortOrder(ProductSortBy.Name)">
                                 @nameof(Model.Product.Name)
+                                @if (Model.SortBy == ProductSortBy.Name)
+                                {
+                                    <div class="" style=" @GetSortOrderIndicatorStyle()">&#9650;</div>
+                                }
                             </a>
-                            @if (Model.SortBy == ProductSortBy.Name)
-                            {
-                                <div class="" style="@GetSortOrderIndicatorStyle()">&#9650;</div>
-                            }
                         </div>
                     </th>
                     <th class="text-nowrap">
                         <div class="d-flex gap-2 align-items-center">
-                            <a asp-route-sort="@nameof(Model.Product.Price)"
-                                asp-route-order="@GetSortOrder(ProductSortBy.Price)" class="text-body">
+                            <a class="text-body" asp-route-sort="@nameof(Model.Product.Price)"
+                                asp-route-order="@GetSortOrder(ProductSortBy.Price)">
                                 @nameof(Model.Product.Price)
                             </a>
                             @if (Model.SortBy == ProductSortBy.Price)
@@ -205,9 +201,9 @@
                                 </button>
                                 <div class="dropdown-menu p-0">
                                     <div class="d-flex flex-column gap-3 p-2">
-                                        <select size="3" name="categories" asp-for="SelectedCategoryIds"
-                                            asp-items="Model.Categories" class="form-select rounded-0"
-                                            aria-label="Category select">
+                                        <select size="@Model.Categories.Count" name="categories"
+                                            asp-for="SelectedCategoryIds" asp-items="Model.Categories"
+                                            class="form-select rounded-0" aria-label="Category select">
                                         </select>
                                         <button class="btn btn-sm btn-outline-primary btn" type="submit">Apply</button>
                                     </div>

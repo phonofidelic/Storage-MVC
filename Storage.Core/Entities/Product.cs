@@ -14,7 +14,8 @@ namespace Storage.Core.Entities
         public int InventoryCount { get; set; }
         public string? Description { get; set; }
         public  int CategoryId { get; set; }
-        
+
         // ToDo: Add Category navigational property
+        public Category Category { get; set; } = default!;
     }
 }

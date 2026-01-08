@@ -1,6 +1,6 @@
+using Storage.Core.Entities;
 using System;
 using System.ComponentModel.DataAnnotations;
-using Storage.Models.Entities;
 
 namespace Storage.Models.ViewModels;
 

@@ -1,7 +1,7 @@
 ﻿using Storage.Models.ViewModels;
 using Bogus;
 using Microsoft.IdentityModel.Tokens;
-using Storage.Models.Entities;
+using Storage.Core.Entities;
 
 namespace Storage.Models
 {
@@ -37,7 +37,7 @@ namespace Storage.Models
                 Price = product.Price,
                 OrderDate = product.OrderDate,
                 CategoryId = product.CategoryId,
-                Count = product.Count,
+                InventoryCount = product.Count,
                 Description = product.Description ?? ""
             });
 

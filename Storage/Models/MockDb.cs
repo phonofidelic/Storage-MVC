@@ -1,4 +1,4 @@
-using Storage.Models.Entities;
+using Storage.Core.Entities;
 using System;
 
 namespace Storage.Models;

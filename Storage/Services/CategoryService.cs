@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Storage.Models.Entities;
+using Storage.Core.Entities;
 using Storage.Models.ViewModels;
 
 namespace Storage.Services
@@ -70,7 +70,7 @@ namespace Storage.Services
             {
                 Id = category.Id,
                 Name = category.Name,
-                ProductCount = category.Products?.Count ?? 0,
+                //ProductCount = category.Products?.Count ?? 0,
                 Description = category.Description
             };
         }

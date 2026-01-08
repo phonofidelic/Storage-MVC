@@ -9,6 +9,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\**" />
+    <Content Remove="Migrations\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <None Remove="Migrations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\CategoriesController.cs" />
+    <Compile Remove="Data\StorageContext.cs" />
+    <Compile Remove="Models\DbInitializer.cs" />
+    <Compile Remove="Models\MockCategoryRepository.cs" />
+    <Compile Remove="Models\MockDb.cs" />
+    <Compile Remove="Models\MockProductRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Bogus" Version="35.6.5" />
     <PackageReference Include="Microsoft.Build" Version="18.0.2" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="18.0.2" />
@@ -21,7 +37,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\" />
     <Folder Include="wwwroot/public/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Storage.Persistence\Storage.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

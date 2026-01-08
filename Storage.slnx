@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="Storage.Core/Storage.Core.csproj" Id="555b5798-1bca-491d-ae7a-4475fdea1abc" />
+  <Project Path="Storage.Persistence/Storage.Persistence.csproj" Id="065d4a25-ca01-45de-b7b0-2b531a633408" />
   <Project Path="Storage/Storage.csproj" />
 </Solution>

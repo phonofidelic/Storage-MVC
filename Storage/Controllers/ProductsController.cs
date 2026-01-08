@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
+using Storage.Core.Entities;
 using Storage.Models;
-using Storage.Models.Entities;
 using Storage.Models.ViewModels;
 using Storage.Services;
 
@@ -36,8 +36,8 @@ namespace Storage.Controllers
         public async Task<IActionResult> Index(
             [FromQuery] IEnumerable<int> categories,
             [FromQuery] int? removeCategory,
-            [FromQuery] int? minPrice,
-            [FromQuery] int? maxPrice,
+            [FromQuery] decimal? minPrice,
+            [FromQuery] decimal? maxPrice,
             [FromQuery] DateTime? minOrderDate,
             [FromQuery] DateTime? maxOrderDate,
             [FromQuery] ProductSortBy sort = ProductSortBy.Name,
@@ -46,10 +46,10 @@ namespace Storage.Controllers
         {
             IEnumerable<int> selectedCategoryIds = categories.ToList().Where(c => c != removeCategory) ?? [];
 
-            int defaultMinPrice = await _productRepository.GetMinPrice();
-            int defaultMaxPrice = await _productRepository.GetMaxPrice();
-            int minPriceOrDefault = minPrice ?? defaultMinPrice;
-            int maxPriceOrDefault = maxPrice ?? defaultMaxPrice;
+            decimal defaultMinPrice = await _productRepository.GetMinPrice();
+            decimal defaultMaxPrice = await _productRepository.GetMaxPrice();
+            decimal minPriceOrDefault = minPrice ?? defaultMinPrice;
+            decimal maxPriceOrDefault = maxPrice ?? defaultMaxPrice;
 
             var allCategories = await _categoryRepository.GetAllCategoriesAsync();
             IEnumerable<Product> filteredProducts = 
@@ -94,8 +94,8 @@ namespace Storage.Controllers
 
                 case ProductSortBy.Count:
                     filteredProducts = order == SortOrder.Ascending ? 
-                        filteredProducts.OrderBy(p => p.Count) :
-                        filteredProducts.OrderByDescending(p => p.Count);
+                        filteredProducts.OrderBy(p => p.InventoryCount) :
+                        filteredProducts.OrderByDescending(p => p.InventoryCount);
                     break;
 
                 default:
@@ -114,10 +114,10 @@ namespace Storage.Controllers
                 Categories = _categoryService.GetCategorySelects(allCategories, selectedCategoryIds),
                 SelectedCategoryIds = selectedCategoryIds,
                 SelectedCategories = await _categoryRepository.GetCategoriesByIdAsync(selectedCategoryIds),
-                DefaultMinPrice = defaultMinPrice,
-                DefaultMaxPrice = defaultMaxPrice,
-                MinPrice = minPriceOrDefault,
-                MaxPrice = maxPriceOrDefault,
+                DefaultMinPrice = (int)defaultMinPrice,
+                DefaultMaxPrice = (int)defaultMaxPrice,
+                MinPrice = (int)minPriceOrDefault,
+                MaxPrice = (int)maxPriceOrDefault,
                 MinOrderDate = minOrderDate,
                 MaxOrderDate = maxOrderDate,
                 SortBy = sort,

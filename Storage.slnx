@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="Storage.Core/Storage.Core.csproj" Id="555b5798-1bca-491d-ae7a-4475fdea1abc" />
   <Project Path="Storage/Storage.csproj" />
 </Solution>

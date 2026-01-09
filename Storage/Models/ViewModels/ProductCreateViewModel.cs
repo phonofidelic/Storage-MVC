@@ -10,8 +10,11 @@ public class ProductCreateViewModel
         public string Name { get; set; } = string.Empty;
 
         [DataType(DataType.Currency)]
-        [Range(0, int.MaxValue, ErrorMessage = "Price must be a positive number")]
-        public int Price { get; set; } = 0;
+        [Range(0, 999999999999, ErrorMessage = "Price must be a positive number")]
+        public decimal Price { get; set; } = 0;
+
+        [DataType(DataType.Currency)]
+        public decimal PurchasePrice { get; set; }
 
         [Display(Name = "Order Date")]
         [DataType(DataType.Date)]
@@ -25,5 +28,5 @@ public class ProductCreateViewModel
 
         [MaxLength(200)]
         public string? Description { get; set; } = string.Empty;
-        public List<SelectListItem> Categories { get; set; } = [];
+        public IEnumerable<SelectListItem> CategorySelectItems { get; set; } = [];
 }

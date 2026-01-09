@@ -1,5 +1,5 @@
 using System;
-using Storage.Models.Entities;
+using Storage.Core.Entities;
 using Storage.Models.ViewModels;
 
 namespace Storage.Models;

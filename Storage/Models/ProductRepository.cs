@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Storage.Data;
-using Storage.Models.Entities;
+using Storage.Core.Entities;
 using Storage.Models.ViewModels;
+using Storage.Persistence.Data;
 
 namespace Storage.Models
 {
@@ -21,14 +21,15 @@ namespace Storage.Models
         }
         private async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            _products = await _storageDbContext.Product.ToListAsync();
+            _products = await _storageDbContext.Products.ToListAsync();
             return _products;
         }
         public IEnumerable<Product> AllProducts
         {
             get
             {
-                return _storageDbContext.Product.Include(p => p.Category).Include(p => p.Image);
+                return _storageDbContext.Products.ToList();
+                    //.Include(p => p.Category).Include(p => p.Image);
             }
         }
 
@@ -38,10 +39,11 @@ namespace Storage.Models
             {
                 Name = product.Name,
                 Price = product.Price,
+                PurchasePrice = product.PurchasePrice,
                 OrderDate = product.OrderDate,
                 CategoryId = product.CategoryId,
                 Shelf = product.Shelf,
-                Count = product.Count,
+                InventoryCount = product.Count,
                 Description = product.Description
             });
             
@@ -54,26 +56,26 @@ namespace Storage.Models
             Product product = await _storageDbContext.FindAsync<Product>(productEditDto.Id) ?? 
                 throw new Exception(string.Format("Could not find product with Id '(Id)'", productEditDto.Id));
 
-            Image? productImage = productEditDto.Image?.Alt != null && productEditDto.Image?.Path != null ? new()
-            {
-                Alt = productEditDto.Image.Alt ?? product.Image?.Alt!,
-                Path = productEditDto.Image.Path ?? product.Image?.Path!
-            } : product.Image;
+            //Image? productImage = productEditDto.Image?.Alt != null && productEditDto.Image?.Path != null ? new()
+            //{
+            //    Alt = productEditDto.Image.Alt ?? product.Image?.Alt!,
+            //    Path = productEditDto.Image.Path ?? product.Image?.Path!
+            //} : product.Image;
 
-            if (productImage != null)
-            {
-                _storageDbContext.Add(productImage);
-            }
+            //if (productImage != null)
+            //{
+            //    _storageDbContext.Add(productImage);
+            //}
 
             product.Name = productEditDto.Name ?? product.Name;
             product.Price = productEditDto.Price ?? product.Price;
             product.OrderDate = productEditDto.OrderDate ?? product.OrderDate;
-            product.Category = productEditDto.Category ?? product.Category;
+            //product.Category = productEditDto.Category ?? product.Category;
             product.CategoryId = productEditDto.CategoryId ?? product.CategoryId;
-            product.Shelf = productEditDto.Shelf ?? product.Shelf;
-            product.Count = productEditDto.Count ?? product.Count;
+            //product.Shelf = productEditDto.Shelf ?? product.Shelf;
+            product.InventoryCount = productEditDto.Count ?? product.InventoryCount;
             product.Description = productEditDto.Description ?? product.Description;
-            product.Image = productImage ?? product.Image;
+            //product.Image = productImage ?? product.Image;
 
 
             // _storageDbContext.Update(product);
@@ -82,26 +84,26 @@ namespace Storage.Models
 
         public async Task<Product?> GetProductByIdAsync(int? productId)
         {
-            return await _storageDbContext.Product
+            return await _storageDbContext.Products
                 .Include(p => p.Category)
-                .Include(p => p.Image)
+                //.Include(p => p.Image)
                 .FirstAsync(p => p.Id == productId);
         }
 
         public async void Delete(int Id)
         {
-            var product = _storageDbContext.Product.Find(Id);
+            var product = _storageDbContext.Products.Find(Id);
             if (product != null)
             {
-                _storageDbContext.Product.Remove(product);
+                _storageDbContext.Products.Remove(product);
             }
 
             _storageDbContext.SaveChanges();
         }
 
         public async Task<IEnumerable<Product>> FilterProductsAsync(
-            int? minPrice,
-            int? maxPrice,
+            decimal? minPrice,
+            decimal? maxPrice,
             IEnumerable<int>? categoryFilter,
             DateTime? minOrderDate, 
             DateTime? maxOrderDate)
@@ -138,22 +140,22 @@ namespace Storage.Models
                 Price = product.Price,
                 OrderDate = product.OrderDate,
                 CategoryId = product.CategoryId,
-                Shelf = product.Shelf,
-                Count = product.Count,
+                //Shelf = product.Shelf,
+                InventoryCount = product.Count,
                 Description = product.Description
             });
 
             await _storageDbContext.SaveChangesAsync();
         }
 
-        public Task<int> GetMaxPrice()
+        public Task<decimal> GetMaxPrice()
         {
-            return _storageDbContext.Product.MaxAsync(p => p.Price);
+            return _storageDbContext.Products.MaxAsync(p => p.Price);
         }
 
-        public Task<int> GetMinPrice()
+        public Task<decimal> GetMinPrice()
         {
-            return _storageDbContext.Product.MinAsync(p => p.Price);
+            return _storageDbContext.Products.MinAsync(p => p.Price);
         }
     }
 }

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Storage.Data;
-using Storage.Models.Entities;
+using Storage.Core.Entities;
 using Storage.Models.ViewModels;
+using Storage.Persistence.Data;
 using Storage.Services;
 
 namespace Storage.Controllers
@@ -30,7 +30,7 @@ namespace Storage.Controllers
         {
             CategoryIndexViewModel viewModel = new()
             {
-                Categories = await _context.Category
+                Categories = await _context.Categories
                     .Include(c => c.Products)
                     .Select(c => _categoryService.MapCategoryListItem(c))
                     .ToListAsync()
@@ -46,7 +46,7 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Category
+            var category = await _context.Categories.Include(c => c.Products)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (category == null)
             {
@@ -93,7 +93,7 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Category.FindAsync(id);
+            var category = await _context.Categories.FindAsync(id);
             if (category == null)
             {
                 return NotFound();
@@ -152,7 +152,7 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Category
+            var category = await _context.Categories
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (category == null)
             {
@@ -169,10 +169,10 @@ namespace Storage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await _context.Category.FindAsync(id);
+            var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
-                _context.Category.Remove(category);
+                _context.Categories.Remove(category);
             }
 
             await _context.SaveChangesAsync();
@@ -181,7 +181,7 @@ namespace Storage.Controllers
 
         private bool CategoryExists(int id)
         {
-            return _context.Category.Any(e => e.Id == id);
+            return _context.Categories.Any(e => e.Id == id);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Storage.Core.Entities;
 using Storage.Models;
-using Storage.Models.Entities;
 using Storage.Models.ViewModels;
 
 namespace Storage.Services

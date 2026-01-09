@@ -1,5 +1,4 @@
-﻿@using Storage.Models.Entities
-@model Product
+﻿@model Product
 
 @{
     ViewData["Title"] = "Delete";
@@ -43,10 +42,10 @@
             @Html.DisplayFor(model => model.Shelf)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Count)
+            @Html.DisplayNameFor(model => model.InventoryCount)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Count)
+            @Html.DisplayFor(model => model.InventoryCount)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)

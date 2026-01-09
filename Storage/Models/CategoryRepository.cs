@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using Storage.Data;
-using Storage.Models.Entities;
+using Storage.Core.Entities;
+using Storage.Persistence.Data;
 
 namespace Storage.Models
 {
@@ -15,12 +15,12 @@ namespace Storage.Models
 
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            return await _storageContext.Category.Include(c => c.Products).ToListAsync();
+            return await _storageContext.Categories.Include(c => c.Products).ToListAsync();
         }
 
         public async Task<IEnumerable<Category>> GetCategoriesByIdAsync(IEnumerable<int> ids)
         {
-            return await _storageContext.Category.Where(c => ids.Contains(c.Id)).ToListAsync();
+            return await _storageContext.Categories.Where(c => ids.Contains(c.Id)).ToListAsync();
         }
 
         public async Task<Category?> GetCategoryByIdAsync(int categoryId)

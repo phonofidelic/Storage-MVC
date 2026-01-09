@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Bogus.DataSets;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Storage.Models.Entities;
+using Storage.Core.Entities;
 
 namespace Storage.Models.ViewModels
 {

@@ -68,7 +68,6 @@ namespace Storage.Persistence
                     InventoryCount = rand.Next(5, 500),
                     Shelf = shelf,
                     Description = rand.Next(0, 5) > 0 ? faker.Commerce.ProductDescription() : null,
-                    //CategoryId = category.Id,
                     Category = category
                 });
             }

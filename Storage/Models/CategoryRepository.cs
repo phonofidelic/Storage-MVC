@@ -15,14 +15,12 @@ namespace Storage.Models
 
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            throw new NotImplementedException();
-            //return await _storageContext.Category.Include(c => c.Products).ToListAsync();
+            return await _storageContext.Categories.Include(c => c.Products).ToListAsync();
         }
 
         public async Task<IEnumerable<Category>> GetCategoriesByIdAsync(IEnumerable<int> ids)
         {
-            throw new NotImplementedException();
-            //return await _storageContext.Category.Where(c => ids.Contains(c.Id)).ToListAsync();
+            return await _storageContext.Categories.Where(c => ids.Contains(c.Id)).ToListAsync();
         }
 
         public async Task<Category?> GetCategoryByIdAsync(int categoryId)

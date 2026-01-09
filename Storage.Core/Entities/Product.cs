@@ -12,7 +12,7 @@ namespace Storage.Core.Entities
         public DateTime OrderDate { get; set; }
         public decimal PurchasePrice { get; set; }
         public int InventoryCount { get; set; }
-        public string Shelf { get; set; }
+        public string Shelf { get; set; } = string.Empty;
         public string? Description { get; set; }
         public  int CategoryId { get; set; }
 

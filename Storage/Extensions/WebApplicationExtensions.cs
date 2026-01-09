@@ -13,8 +13,8 @@ namespace Storage.Extensions
                 var serviceProvider = scope.ServiceProvider;
                 var context = serviceProvider.GetRequiredService<StorageContext>();
 
-                await context.Database.EnsureDeletedAsync();
-                await context.Database.MigrateAsync();
+                //await context.Database.EnsureDeletedAsync();
+                //await context.Database.MigrateAsync();
 
                 try
                 {

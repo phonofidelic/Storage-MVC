@@ -9,4 +9,6 @@ public class CategoryDetailsViewModel
     public string Name { get; set; } = default!;
     
     public string? Description { get; set; }
+
+    public IEnumerable<ProductListItemViewModel> Products { get; set; } = [];
 }

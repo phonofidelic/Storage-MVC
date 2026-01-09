@@ -5,7 +5,8 @@ namespace Storage.Models;
 public record ProductCreateDto
 (
     string Name,
-    int Price,
+    decimal Price,
+    decimal PurchasePrice,
     DateTime OrderDate,
     int CategoryId,
     string Shelf,

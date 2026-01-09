@@ -9,15 +9,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\**" />
     <Compile Remove="Migrations\**" />
+    <Compile Remove="Models\Entities\**" />
+    <Content Remove="Data\**" />
     <Content Remove="Migrations\**" />
+    <Content Remove="Models\Entities\**" />
+    <EmbeddedResource Remove="Data\**" />
     <EmbeddedResource Remove="Migrations\**" />
+    <EmbeddedResource Remove="Models\Entities\**" />
+    <None Remove="Data\**" />
     <None Remove="Migrations\**" />
+    <None Remove="Models\Entities\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\CategoriesController.cs" />
-    <Compile Remove="Data\StorageContext.cs" />
     <Compile Remove="Models\DbInitializer.cs" />
     <Compile Remove="Models\MockCategoryRepository.cs" />
     <Compile Remove="Models\MockDb.cs" />
@@ -37,11 +43,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
     <Folder Include="wwwroot/public/" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Storage.Core\Storage.Core.csproj" />
     <ProjectReference Include="..\Storage.Persistence\Storage.Persistence.csproj" />
   </ItemGroup>
 

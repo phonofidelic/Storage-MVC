@@ -28,6 +28,10 @@ namespace Storage.Persistence.Data
             // https://stackoverflow.com/a/224866
             modelBuilder.Entity<Product>().Property("Price").HasPrecision(19,4);
             modelBuilder.Entity<Product>().Property("PurchasePrice").HasPrecision(19,4);
+
+            modelBuilder.Entity<Category>()
+                .HasMany(c => c.Products)
+                .WithOne(p => p.Category);
         }
 
         public override int SaveChanges()

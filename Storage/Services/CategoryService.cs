@@ -6,10 +6,12 @@ namespace Storage.Services
 {
     public class CategoryService : ICategoryService
     {
+        private readonly IProductService _productService;
         private readonly ILogger<CategoryService> _logger;
 
-        public CategoryService(ILogger<CategoryService> logger)
+        public CategoryService(IProductService productService, ILogger<CategoryService> logger)
         {
+            _productService = productService;
             _logger = logger;
         }
         public List<SelectListItem> GetCategorySelects(IEnumerable<Category> categories, IEnumerable<int> selectedIds)
@@ -28,11 +30,12 @@ namespace Storage.Services
             return categories.Select(c => { 
                 _logger.LogInformation("c.Id: {0}, {1}", c.Id, c.Id == selectedId);
                 return new SelectListItem()
-            {
-                Value = c.Id.ToString(),
-                Text = c.Name,
-                Selected = c.Id == selectedId
-            };}).ToList();
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name,
+                    Selected = c.Id == selectedId
+                };
+            }).ToList();
         }
 
         public List<SelectListItem> GetCategorySelects(IEnumerable<Category> categories)
@@ -50,7 +53,8 @@ namespace Storage.Services
             {
                 Id = category.Id,
                 Name = category.Name,
-                Description = category.Description
+                Description = category.Description,
+                Products = category.Products.Select(_productService.MapProductListItem)
             };
         }
 
@@ -70,7 +74,7 @@ namespace Storage.Services
             {
                 Id = category.Id,
                 Name = category.Name,
-                //ProductCount = category.Products?.Count ?? 0,
+                ProductCount = category.Products.Count,
                 Description = category.Description
             };
         }

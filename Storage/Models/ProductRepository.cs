@@ -39,9 +39,10 @@ namespace Storage.Models
             {
                 Name = product.Name,
                 Price = product.Price,
+                PurchasePrice = product.PurchasePrice,
                 OrderDate = product.OrderDate,
                 CategoryId = product.CategoryId,
-                //Shelf = product.Shelf,
+                Shelf = product.Shelf,
                 InventoryCount = product.Count,
                 Description = product.Description
             });

@@ -3,10 +3,10 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Category Details</h1>
 
-<div>
-    <h4>Category</h4>
+<div class="container-fluid">
+    <h4>@Model.Name</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -22,15 +22,47 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
     </dl>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
 </div>
-<div>
-    <h4>Category Products</h4>
-    <hr />
-    <table>
 
-    </table>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+@if (Model?.Products.Count() > 0)
+{
+    <div class="container-fluid">
+        <h4>Category Products</h4>
+        <hr />
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    @foreach(var prop in typeof(ProductListItemViewModel).GetProperties().Where(p => p.Name != "Id"))
+                    {
+                        <th class="text-nowrap">
+                            @prop.Name
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var item in Model.Products)
+                {
+                    <tr>
+                        @foreach (var prop in item.GetType().GetProperties().Where(p => p.Name != "Id"))
+                        {
+                            if (prop.Name == "Name")
+                            {
+                                <td class="text-truncate" style="max-width: 200px;">
+                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                                </td>
+                            } else
+                            {
+                                <td class="text-nowrap">@prop.GetValue(item)</td>
+                            }
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

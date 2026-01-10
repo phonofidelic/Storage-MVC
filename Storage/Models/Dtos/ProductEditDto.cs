@@ -8,12 +8,13 @@ public record ProductEditDto
 (
     int Id,
     string? Name,
-    int? Price,
+    decimal? Price,
+    decimal? PurchasePrice,
     DateTime? OrderDate,
     int? CategoryId,
-    Category? Category,
+    // Category? Category,
     string? Shelf,
-    int? Count,
-    string? Description,
-    ImageInputViewModel? Image
+    int? InventoryCount,
+    string? Description
+    // ImageInputViewModel? Image
 );

@@ -46,7 +46,6 @@ namespace Storage.Models
                 InventoryCount = product.Count,
                 Description = product.Description
             });
-            
         
             _storageDbContext.SaveChanges();
         }
@@ -69,11 +68,11 @@ namespace Storage.Models
 
             product.Name = productEditDto.Name ?? product.Name;
             product.Price = productEditDto.Price ?? product.Price;
+            product.PurchasePrice = productEditDto.PurchasePrice ?? product.PurchasePrice;
             product.OrderDate = productEditDto.OrderDate ?? product.OrderDate;
-            //product.Category = productEditDto.Category ?? product.Category;
             product.CategoryId = productEditDto.CategoryId ?? product.CategoryId;
-            //product.Shelf = productEditDto.Shelf ?? product.Shelf;
-            product.InventoryCount = productEditDto.Count ?? product.InventoryCount;
+            product.Shelf = productEditDto.Shelf ?? product.Shelf;
+            product.InventoryCount = productEditDto.InventoryCount ?? product.InventoryCount;
             product.Description = productEditDto.Description ?? product.Description;
             //product.Image = productImage ?? product.Image;
 

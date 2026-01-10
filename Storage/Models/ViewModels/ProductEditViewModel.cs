@@ -13,9 +13,15 @@ namespace Storage.Models.ViewModels
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        [Range(0, int.MaxValue, ErrorMessage = "{0} must be a number between {2} and {1}")]
+        [Range(0, int.MaxValue, ErrorMessage = "{0} must be a number between {1} and {2}")]
         [DataType(DataType.Currency)]
-        public int Price { get; set; }
+        public decimal Price { get; set; }
+
+        [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "{0} must be a number between {1} and {2}")]
+        [DataType(DataType.Currency)]
+        [Display(Name = "Purchase Price")]
+        public decimal PurchasePrice { get; set; }
 
         [Display(Name = "Order Date")]
         [DataType(DataType.Date)]
@@ -25,7 +31,7 @@ namespace Storage.Models.ViewModels
 
         public int CategoryId { get; set; } = default!;
 
-        public string Shelf { get; set; } = string.Empty;
+        public string Shelf { get; set; } = default!;
 
         [Required]
         [Range(0, int.MaxValue, ErrorMessage = "{0} must be a number between {2} and {1}")]

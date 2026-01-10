@@ -3,10 +3,10 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Category Details</h1>
+<h1>@Model.Name</h1>
 
 <div class="container-fluid">
-    <h4>@Model.Name</h4>
+    <h4>Category Details</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -36,7 +36,10 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    @foreach(var prop in typeof(ProductListItemViewModel).GetProperties().Where(p => p.Name != "Id"))
+                    @foreach (var prop in typeof(ProductListItemViewModel)
+                                    .GetProperties()
+                                    .Where(p => p.Name != "Id")
+                                    .Where(p => p.Name != "Category"))
                     {
                         <th class="text-nowrap">
                             @prop.Name
@@ -45,19 +48,26 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(var item in Model.Products)
+                @foreach (var item in Model.Products)
                 {
                     <tr>
-                        @foreach (var prop in item.GetType().GetProperties().Where(p => p.Name != "Id"))
+                        @foreach (var prop in item.GetType()
+                                        .GetProperties()
+                                        .Where(p => p.Name != "Id")
+                                        .Where(p => p.Name != "Category"))
                         {
                             if (prop.Name == "Name")
                             {
                                 <td class="text-truncate" style="max-width: 200px;">
-                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-                                </td>
-                            } else
+                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem
+                                                                => item.Name)</a>
+                </td>
+                                }
+                            else
                             {
-                                <td class="text-nowrap">@prop.GetValue(item)</td>
+                                <td class="text-truncate" style="max-width: 300px;">
+                                    @prop.GetValue(item)
+                                </td>
                             }
                         }
                     </tr>

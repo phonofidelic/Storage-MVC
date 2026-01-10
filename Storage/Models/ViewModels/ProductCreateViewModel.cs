@@ -10,10 +10,12 @@ public class ProductCreateViewModel
         public string Name { get; set; } = string.Empty;
 
         [DataType(DataType.Currency)]
-        [Range(0, 999999999999, ErrorMessage = "Price must be a positive number")]
-        public decimal Price { get; set; } = 0;
+        [Range(0, int.MaxValue, ErrorMessage = "{0} must be a positive number between {1} and {2}")]
+        public decimal Price { get; set; }
 
         [DataType(DataType.Currency)]
+        [Range(0, int.MaxValue, ErrorMessage = "{0} must be a positive number between {1} and {2}")]
+        [Display(Name = "Purchase Price")]
         public decimal PurchasePrice { get; set; }
 
         [Display(Name = "Order Date")]
@@ -22,7 +24,7 @@ public class ProductCreateViewModel
 
         public int CategoryId { get; set; }
         
-        public string Shelf { get; set; } = string.Empty;
+        public string Shelf { get; set; } = default!;
 
         public int Count { get; set; }
 

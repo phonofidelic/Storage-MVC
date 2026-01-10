@@ -1,4 +1,5 @@
-﻿using Humanizer;
+﻿using System.Data.Common;
+using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -249,8 +250,6 @@ namespace Storage.Controllers
                 return NotFound();
             }
 
-            Category category = await _categoryRepository.GetCategoryByIdAsync(productEditViewModel.CategoryId) ?? throw new Exception("Category not found");
-
             var categories = await _categoryRepository.GetAllCategoriesAsync();
             ProductEditViewModel viewModel = _productService.MapProductEditViewModel(
                 product, _categoryService.GetCategorySelects(categories, productEditViewModel.CategoryId));
@@ -275,17 +274,17 @@ namespace Storage.Controllers
             {
                 try
                 {
-                    ProductEditDto productEditDto = new(
-                        productEditViewModel.Id,
-                        productEditViewModel.Name,
-                        productEditViewModel.Price,
-                        productEditViewModel.OrderDate,
-                        productEditViewModel.CategoryId,
-                        category,
-                        productEditViewModel.Shelf,
-                        productEditViewModel.Count,
-                        productEditViewModel.Description,
-                        image
+                    ProductEditDto productEditDto = new ProductEditDto(
+                        Id: productEditViewModel.Id,
+                        Name: productEditViewModel.Name,
+                        Price: productEditViewModel.Price,
+                        PurchasePrice: productEditViewModel.PurchasePrice,
+                        OrderDate: productEditViewModel.OrderDate,
+                        CategoryId: productEditViewModel.CategoryId,
+                        Shelf: productEditViewModel.Shelf,
+                        InventoryCount: productEditViewModel.Count,
+                        Description: productEditViewModel.Description
+                        // image
                     );
                     await _productRepository.UpdateAsync(productEditDto);
                 }

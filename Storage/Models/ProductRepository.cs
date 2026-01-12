@@ -21,7 +21,7 @@ namespace Storage.Models
 
         public int AllProductsCount { get => _storageDbContext.Products.Count(); }
 
-        public IEnumerable<Product> AllProducts { get => _storageDbContext.Products; }
+        public IEnumerable<Product> AllProducts { get => _storageDbContext.Products.Include(p => p.Category); }
 
         public async void Create(ProductCreateDto product)
         {

@@ -36,6 +36,10 @@ body {
   text-align: start;
 }
 
+.category-filter-badge {
+  margin-top: auto;
+  margin-bottom: auto;
+}
 .category-filter-badge:hover {
   background-color: var(--bs-danger);
   transition: background-color 125ms linear;

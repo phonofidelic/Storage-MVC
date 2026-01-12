@@ -19,19 +19,16 @@ namespace Storage.Models
             _storageDbContext = storageDbContext;
             _logger = logger;
         }
+
         private async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
             _products = await _storageDbContext.Products.ToListAsync();
             return _products;
         }
-        public IEnumerable<Product> AllProducts
-        {
-            get
-            {
-                return _storageDbContext.Products.ToList();
-                    //.Include(p => p.Category).Include(p => p.Image);
-            }
-        }
+
+        public int AllProductsCount { get => _storageDbContext.Products.Count(); }
+
+        public IEnumerable<Product> AllProducts { get => _storageDbContext.Products; }
 
         public async void Create(ProductCreateDto product)
         {

@@ -8,6 +8,7 @@ namespace Storage.Models
     public interface IProductRepository
     {
         IEnumerable<Product> AllProducts { get; }
+        int AllProductsCount { get; }
         Task<Product?> GetProductByIdAsync(int? productId);
         Task<IEnumerable<Product>> FilterProductsAsync(decimal? minPrice, decimal? maxPrice, IEnumerable<int>? categoryIds, DateTime? minOrderDate, DateTime? maxOrderDate);
         Task CreateAsync(ProductCreateDto product);

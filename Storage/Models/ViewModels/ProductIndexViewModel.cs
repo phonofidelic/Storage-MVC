@@ -56,6 +56,8 @@ namespace Storage.Models.ViewModels
         [DataType(DataType.Date)]
         public DateTime? MaxOrderDate { get; set; }
 
+        public string? SelectedCategoriesString { get; set; } = string.Empty;
+
         public string? SelectedCategoryIds { get; set; } = string.Empty;
 
         public ProductSortBy SortBy { get; set; }

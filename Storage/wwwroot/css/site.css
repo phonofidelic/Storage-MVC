@@ -44,3 +44,14 @@ body {
   background-color: var(--bs-danger);
   transition: background-color 125ms linear;
 }
+
+.product-table-header {
+  top: 108px;
+  box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: 768px) {
+  .product-table-header {
+    top: 124px;
+  }
+}

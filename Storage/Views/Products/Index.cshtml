@@ -332,31 +332,25 @@
         <div>Page @Model.ListParameters.CurrentPage of @Model.TotalPages</div>
         @if (Model.ListParameters.CurrentPage > 1)
         {
-            @* <a asp-action="Index"
-                asp-all-route-data="AddPageRouteData(Prev(Model.ListParameters.CurrentPage).ToString())">Previous</a> *@
-            <a asp-action="Index" asp-route-page="@Prev(Model.ListParameters.CurrentPage)"
+            <a asp-action="Index" 
+                asp-route-page="@Prev(Model.ListParameters.CurrentPage)"
                 asp-route-limit="@Model.ListParameters.PageLimit" asp-route-sort="@Model.ListParameters.SortBy"
                 asp-route-order="@Model.ListParameters.SortOrder" asp-route-minPrice="@Model.ListParameters.MinPrice"
                 asp-route-maxPrice="@Model.ListParameters.MaxPrice"
                 asp-route-minOrderDate="@Model.ListParameters.MinOrderDate"
                 asp-route-maxOrderDate="@Model.ListParameters.MaxOrderDate"
                 asp-route-categories="@Model.ListParameters.SelectedCategoryIds">Previous</a>
-            @* <input type="hidden" name="page" value="@Prev(Model.CurrentPage)" /> *@
-            @* <input type="submit" value="Previous" class="btn btn-link" asp-route-page="@Prev(Model.CurrentPage)" /> *@
         }
         @if (Model.ListParameters.CurrentPage < Model.TotalPages)
         {
-            @* <a asp-action="Index"
-                asp-all-route-data="AddPageRouteData(Next(Model.ListParameters.CurrentPage).ToString())">Next</a> *@
-            <a asp-action="Index" asp-route-page="@Next(Model.ListParameters.CurrentPage)"
+            <a asp-action="Index" 
+                asp-route-page="@Next(Model.ListParameters.CurrentPage)"
                 asp-route-limit="@Model.ListParameters.PageLimit" asp-route-sort="@Model.ListParameters.SortBy"
                 asp-route-order="@Model.ListParameters.SortOrder" asp-route-minPrice="@Model.ListParameters.MinPrice"
                 asp-route-maxPrice="@Model.ListParameters.MaxPrice"
                 asp-route-minOrderDate="@Model.ListParameters.MinOrderDate"
                 asp-route-maxOrderDate="@Model.ListParameters.MaxOrderDate"
                 asp-route-categories="@Model.ListParameters.SelectedCategoryIds">Next</a>
-            @* <input type="hidden" name="page" value="@Next(Model.CurrentPage)" /> *@
-            @* <input type="submit" value="Next" class="btn btn-link" asp-route-page="@Next(Model.CurrentPage)" /> *@
         }
     </div>
 </form>

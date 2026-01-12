@@ -1,9 +1,8 @@
-﻿using System.Data.Common;
-using Humanizer;
+﻿using System.Text.RegularExpressions;
+using System.Web;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol;
 using Storage.Core.Entities;
 using Storage.Models;
 using Storage.Models.ViewModels;
@@ -18,6 +17,9 @@ namespace Storage.Controllers
         private readonly ICategoryRepository _categoryRepository;
         private readonly ICategoryService _categoryService;
         private readonly ILogger<ProductsController> _logger;
+        
+        // ToDo: Set _maxTake in config?
+        private const int _maxTake = 50;
 
         public ProductsController(
             IProductRepository productRepository,
@@ -35,29 +37,47 @@ namespace Storage.Controllers
 
         // GET: Products?filter=1&filter=2
         public async Task<IActionResult> Index(
-            [FromQuery] IEnumerable<int> categories,
+            [Bind("ProductListParameters")] ProductIndexViewModel inViewModel,
             [FromQuery] int? removeCategory,
             [FromQuery] decimal? minPrice,
             [FromQuery] decimal? maxPrice,
             [FromQuery] DateTime? minOrderDate,
             [FromQuery] DateTime? maxOrderDate,
+            [FromQuery] int? limit = _maxTake,
+            [FromQuery] int? page = 1,
             [FromQuery] ProductSortBy sort = ProductSortBy.Name,
             [FromQuery] SortOrder order = SortOrder.Ascending
             )
         {
-            IEnumerable<int> selectedCategoryIds = categories.ToList().Where(c => c != removeCategory) ?? [];
+            int currentPage = page ?? inViewModel.ListParameters.CurrentPage;
+            int pageLimit = limit ?? inViewModel.ListParameters.PageLimit;
+            int offset = pageLimit * (currentPage - 1);
+
+            // ToDo: Move to model binder?
+            string categoryMatcher = @"categories=\d+";
+            IEnumerable<int> selectedCategoryIds = Regex.Matches(HttpUtility.UrlDecode(Request.GetDisplayUrl()), categoryMatcher)
+                .Select(m => m.Value.Replace("categories=", ""))
+                .Select(c => {
+                    if (int.TryParse(c, out int catId))
+                    {
+                        return catId;
+                    }
+                    return 0;   
+                })
+                .Distinct()
+                .Where(c => c != removeCategory)
+                .ToList() ?? [];
 
             decimal defaultMinPrice = await _productRepository.GetMinPrice();
             decimal defaultMaxPrice = await _productRepository.GetMaxPrice();
             decimal minPriceOrDefault = minPrice ?? defaultMinPrice;
             decimal maxPriceOrDefault = maxPrice ?? defaultMaxPrice;
-
-            var allCategories = await _categoryRepository.GetAllCategoriesAsync();
+            
             IEnumerable<Product> filteredProducts = 
                 await _productRepository.FilterProductsAsync(
                     minPriceOrDefault, 
                     maxPriceOrDefault, 
-                    selectedCategoryIds, 
+                    selectedCategoryIds,
                     minOrderDate, 
                     maxOrderDate);
 
@@ -104,27 +124,47 @@ namespace Storage.Controllers
                     break;
             }
 
-            IEnumerable<ProductListItemViewModel> productListItems = filteredProducts
-                .ToList()
-                .Select(_productService.MapProductListItem);
+            // Make sure we don't take more than max
+            if (pageLimit > _maxTake) pageLimit = _maxTake;
 
-            ProductIndexViewModel viewModel = new()
+            IEnumerable<ProductListItemViewModel> productListItems = filteredProducts
+                .Skip(offset)
+                .Take(pageLimit)
+                .Select(_productService.MapProductListItem)
+                .ToList();
+
+            int totalProductsCount = _productRepository.AllProductsCount;
+            int filteredProductsCount = filteredProducts.Count();
+
+            ProductListParameters productListParams = new ()
             {
-                Products = productListItems,
-                Count = productListItems.Count(),
-                Categories = _categoryService.GetCategorySelects(allCategories, selectedCategoryIds),
-                SelectedCategoryIds = selectedCategoryIds,
-                SelectedCategories = await _categoryRepository.GetCategoriesByIdAsync(selectedCategoryIds),
-                DefaultMinPrice = (int)defaultMinPrice,
-                DefaultMaxPrice = (int)defaultMaxPrice,
                 MinPrice = (int)minPriceOrDefault,
                 MaxPrice = (int)maxPriceOrDefault,
                 MinOrderDate = minOrderDate,
                 MaxOrderDate = maxOrderDate,
+                SelectedCategoryIds = String.Join("&categories=", selectedCategoryIds),
                 SortBy = sort,
-                SortOrder = order
+                SortOrder = order,
+                PageLimit = pageLimit,
+                Offset = offset,
+                CurrentPage = currentPage
             };
-            return View(viewModel);
+
+
+            ProductIndexViewModel outViewModel = new()
+            {
+                Products = productListItems,
+                TotalProductsCount = totalProductsCount,
+                FilteredProductsCount = filteredProductsCount,
+                CategorySelectItems = _categoryService.GetCategorySelects(await _categoryRepository.GetAllCategoriesAsync(), selectedCategoryIds),
+                SelectedCategories = await _categoryRepository.GetCategoriesByIdAsync(selectedCategoryIds),
+                DefaultMinPrice = (int)defaultMinPrice,
+                DefaultMaxPrice = (int)defaultMaxPrice,
+                TotalPages = (int)Math.Ceiling(filteredProductsCount / (decimal)pageLimit),
+                ListParameters = productListParams
+            };
+
+            return View(outViewModel);
         }
 
         // GET: Products/Details/5
@@ -189,10 +229,6 @@ namespace Storage.Controllers
             }
 
             var allCategories = await _categoryRepository.GetAllCategoriesAsync();
-            foreach (var c in allCategories)
-            {
-                _logger.LogInformation("*** {Category}", c.Name);
-            }
             ProductCreateViewModel viewModel = new()
             {
                 Name = product.Name,
@@ -224,11 +260,6 @@ namespace Storage.Controllers
             }
 
             var categories = await _categoryRepository.GetAllCategoriesAsync();
-            _logger.LogInformation("*** CategoryId: {CategoryId}", product.CategoryId);
-            foreach(var category in categories)
-            {
-                _logger.LogInformation("category.Id: {Id} {1}", category.Id, category.Id == product.CategoryId);
-            }
             ProductEditViewModel viewModel = _productService.MapProductEditViewModel(
                 product, 
                 _categoryService.GetCategorySelects(categories, product.CategoryId));

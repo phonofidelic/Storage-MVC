@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Storage.Extensions;
 using Storage.Models;
+using Storage.Models.ViewModels;
 using Storage.Persistence.Data;
 using Storage.Services;
 
@@ -24,7 +25,8 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+    options.ModelBinderProviders.Insert(0, new ProductListParametersBinderProvider()));
 
 var app = builder.Build();
 

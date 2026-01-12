@@ -12,7 +12,7 @@
     <script src="~/js/color-theme-picker.js">-</script>
 </head>
 
-<body class="h-100 vw-100 position-relative bottom-0 top-0">
+<body class="d-flex flex-column h-100 vw-100 position-relative bottom-0 top-0">
 
     <div class="position-fixed top-0 bg-body z-2 left-0 right-0 vw-100">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom p-3">
@@ -26,7 +26,7 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-body-primary" asp-area="" asp-controller="Categories"
-                               asp-action="Index">Categories</a>
+                                asp-action="Index">Categories</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-body-primary" asp-area="" asp-controller="Products"
@@ -40,7 +40,7 @@
                     <div class="d-flex gap-3 align-items-center list-unstyled">
                         <li class="nav-item">
                             <a class="nav-link text-body-primary" asp-area="" asp-controller="Home"
-                               asp-action="Privacy">Privacy</a>
+                                asp-action="Privacy">Privacy</a>
                         </li>
                         <div class="nav-item dropdown">
                             <button
@@ -77,11 +77,12 @@
             </div>
         </nav>
     </div>
-    <main role="main" class="h-100 p-3" style="margin-top: 68px; padding-bottom: 60px;">
+
+    <main role="main" class="h-100 flex-grow-1" style="margin-top: 73px; padding-bottom: 60px;">
         @RenderBody()
     </main>
-    <footer class="border-top footer text-muted bg-body position-fixed bottom-0 z-1">
-        <div class="container">
+    <footer class="text-muted bottom-0 border-top mt-auto pt-2">
+        <div class="container-fluid">
             &copy; 2025 - Storage - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>

@@ -5,106 +5,127 @@
 
     SortOrder GetSortOrder(ProductSortBy sortBy)
     {
-        if (Model.SortBy == sortBy)
+        if (Model.ListParameters.SortBy == sortBy)
         {
-            return Model.SortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+            return Model.ListParameters.SortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
         }
         else
         {
-            return Model.SortOrder;
+            return Model.ListParameters.SortOrder;
         }
     }
-;
 
     string GetSortOrderIndicatorStyle()
     {
-        string rotation = Model.SortOrder == SortOrder.Ascending
+        string rotation = Model.ListParameters.SortOrder == SortOrder.Ascending
         ? ""
         : "transform: rotate(0.5turn);";
 
         return rotation + " display: inline-block; width: 1rem; line-height: 1rem; text-align: center; font-size: 0.75rem";
     }
-;
-}
-<form method="get" asp-controller="Products" asp-action="Index">
-    <header class="position-fixed bg-body p-3 pb-0 d-flex w-100 align-items-center z-1 overflow-hidden left-0 right-0"
-        style="top: 57px;">
-        <div class="d-flex w-100 bg-body z-2">
-            <h1 class="text-nowrap">Products (@Model.Count)</h1>
-            <div class="d-flex gap-2 w-100 align-items-center px-2">
-                <p class="m-0 p-2">
-                    <a asp-action="Create" class="btn btn-primary text-nowrap">Create New</a>
-                </p>
-                @if (
-                                Model.MinPrice != Model.DefaultMinPrice ||
-                                Model.MaxPrice != Model.DefaultMaxPrice ||
-                                Model.SelectedCategoryIds?.Count() > 0)
-                {
-                    <a asp-action="Index" class="btn btn-outline-danger text-nowrap">Clear all filters</a>
-                }
-                <div class="d-flex flex-wrap gap-2">
-                    @if (Model.MinPrice > Model.DefaultMinPrice)
-                    {
-                        <button type="submit" name="minPrice" value=""
-                            class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
-                            <span class="btn-close me-1"></span>
-                            @Html.DisplayNameFor(model => model.MinPrice):
-                            @Html.DisplayFor(model => model.MinPrice)
-                        </button>
-                    }
-                    @if (Model.MaxPrice < Model.DefaultMaxPrice)
-                    {
-                        <button type="submit" name="maxPrice" value=""
-                            class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
-                            <span class="btn-close me-1"></span>
-                            @Html.DisplayNameFor(model => model.MaxPrice):
-                            @Html.DisplayFor(model => model.MaxPrice)
-                        </button>
-                    }
-                    @if (Model.MinOrderDate != null)
-                    {
-                        <button type="submit" name="minOrderDate" value=""
-                            class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
-                            <span class="btn-close me-1"></span>
-                            @Html.DisplayNameFor(model => model.MinOrderDate):
-                            @Html.DisplayFor(model => model.MinOrderDate)
-                        </button>
-                    }
-                    @if (Model.MaxOrderDate != null)
-                    {
-                        <button type="submit" name="maxOrderDate" value=""
-                            class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
-                            <span class="btn-close me-1"></span>
-                            @Html.DisplayNameFor(model => model.MaxOrderDate):
-                            @Html.DisplayFor(model => model.MaxOrderDate)
-                        </button>
-                    }
-                    @foreach (var category in Model.SelectedCategories)
-                    {
-                        <button type="submit" name="removeCategory" value="@category.Id"
-                            class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
-                            <span class="btn-close me-1"></span>
-                            @Html.DisplayNameFor(model => model.SelectedCategories):
-                            @category.Name
-                        </button>
-                    }
-                </div>
 
+    bool hasAppliedFilters = Model.ListParameters.MinPrice != Model.DefaultMinPrice ||
+    Model.ListParameters.MaxPrice != Model.DefaultMaxPrice ||
+    Model.ListParameters.SelectedCategoryIds?.Count() > 0;
+
+    int Next(int current) => current + 1;
+    int Prev(int current) => current - 1;
+}
+
+<form method="get" asp-controller="Products" asp-action="Index" class="h-100 d">
+    <input type="hidden" name="limit" value="@Model.ListParameters.PageLimit" />
+    @foreach (var selectedCategory in Model.SelectedCategories)
+    {
+        <input type="hidden" id="@selectedCategory.Name" name="categories" value="@selectedCategory.Id" />
+    }
+    <header
+        class="position-fixed bg-body border-top p-3 pb-0 py-auto d-flex w-100 align-items-center z-1 overflow-hidden left-0 right-0"
+        style="top: 57px;">
+        <div class="d-flex gap-2 w-100 bg-body z-2">
+            <h1 class="text-nowrap">Products</h1>
+            <div class="d-flex flex-nowrap align-items-center text-nowrap">
+                <span>(</span>
+                @if (hasAppliedFilters)
+                {
+                    <span>@Model.FilteredProductsCount</span>
+
+                    <span>/</span>
+                }
+                <span>@Model.TotalProductsCount</span>
+                <span>)</span>
+            </div>
+            <a asp-action="Create" class="btn btn-primary text-nowrap my-auto">Create New</a>
+            @if (hasAppliedFilters)
+            {
+                <a asp-action="Index" class="btn btn-outline-danger text-nowrap my-auto">Clear all filters</a>
+            }
+            <div class="d-flex gap-2 my-auto overflow-x-auto">
+                @if (Model.ListParameters.MinPrice > Model.DefaultMinPrice)
+                {
+                    <button type="submit" name="minPrice" value=""
+                        class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
+                        <span class="btn-close me-1"></span>
+                        @Html.DisplayNameFor(model => model.ListParameters.MinPrice):
+                        @Html.DisplayFor(model => model.ListParameters.MinPrice)
+                    </button>
+                }
+                @if (Model.ListParameters.MaxPrice < Model.DefaultMaxPrice)
+                {
+                    <button type="submit" name="maxPrice" value=""
+                        class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
+                        <span class="btn-close me-1"></span>
+                        @Html.DisplayNameFor(model => model.ListParameters.MaxPrice):
+                        @Html.DisplayFor(model => model.ListParameters.MaxPrice)
+                    </button>
+                }
+                @if (Model.ListParameters.MinOrderDate != null)
+                {
+                    <button type="submit" name="minOrderDate" value=""
+                        class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
+                        <span class="btn-close me-1"></span>
+                        @Html.DisplayNameFor(model => model.ListParameters.MinOrderDate):
+                        @Html.DisplayFor(model => model.ListParameters.MinOrderDate)
+                    </button>
+                }
+                @if (Model.ListParameters.MaxOrderDate != null)
+                {
+                    <button type="submit" name="maxOrderDate" value=""
+                        class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
+                        <span class="btn-close me-1"></span>
+                        @Html.DisplayNameFor(model => model.ListParameters.MaxOrderDate):
+                        @Html.DisplayFor(model => model.ListParameters.MaxOrderDate)
+                    </button>
+                }
+                @foreach (var category in Model.SelectedCategories)
+                {
+                    <button type="submit" name="removeCategory" value="@category.Id"
+                        class="btn btn-secondary border-0 fw-medium badge rounded-pill category-filter-badge">
+                        <span class="btn-close me-1"></span>
+                        @Html.DisplayNameFor(model => model.SelectedCategories):
+                        @category.Name
+                    </button>
+                }
             </div>
         </div>
     </header>
 
     <div class="h-100 position-relative d-flex flex-column pe-3" style="width: 100vw;">
         <table class="table mb-0 table-hover position-relative vw-100 overflow-x-scroll"
-            style="margin-top: 40px; max-width: 100vw;">
-            <thead class="bg-body z-0 w-100 position-sticky border-bottom left-0 right-0 shadow-sm" style="top: 126px;">
+            style="margin-top: 52px; max-width: 100vw;">
+            <thead class="product-table-header position-sticky w-100 bg-body p-3 h-100 mt-0">
                 <tr class="w-100 h-100">
-                    <th class=" text-nowrap">
+                    <th class="text-nowrap ps-3">
                         <div class="d-flex gap-2 align-items-center">
                             <a class="text-body" asp-route-sort="@nameof(Model.Product.Name)"
-                                asp-route-order="@GetSortOrder(ProductSortBy.Name)">
+                                asp-route-order="@GetSortOrder(ProductSortBy.Name)"
+                                asp-route-limit="@Model.ListParameters.PageLimit"
+                                asp-route-minPrice="@Model.ListParameters.MinPrice"
+                                asp-route-maxPrice="@Model.ListParameters.MaxPrice"
+                                asp-route-minOrderDate="@Model.ListParameters.MinOrderDate"
+                                asp-route-maxOrderDate="@Model.ListParameters.MaxOrderDate"
+                                asp-route-categories="@Model.ListParameters.SelectedCategoryIds">
                                 @nameof(Model.Product.Name)
-                                @if (Model.SortBy == ProductSortBy.Name)
+                                @if (Model.ListParameters.SortBy == ProductSortBy.Name)
                                 {
                                     <div class="" style=" @GetSortOrderIndicatorStyle()">&#9650;</div>
                                 }
@@ -114,10 +135,16 @@
                     <th class="text-nowrap">
                         <div class="d-flex gap-2 align-items-center">
                             <a class="text-body" asp-route-sort="@nameof(Model.Product.Price)"
-                                asp-route-order="@GetSortOrder(ProductSortBy.Price)">
+                                asp-route-order="@GetSortOrder(ProductSortBy.Price)"
+                                asp-route-limit="@Model.ListParameters.PageLimit"
+                                asp-route-minPrice="@Model.ListParameters.MinPrice"
+                                asp-route-maxPrice="@Model.ListParameters.MaxPrice"
+                                asp-route-minOrderDate="@Model.ListParameters.MinOrderDate"
+                                asp-route-maxOrderDate="@Model.ListParameters.MaxOrderDate"
+                                asp-route-categories="@Model.ListParameters.SelectedCategoryIds">
                                 @nameof(Model.Product.Price)
                             </a>
-                            @if (Model.SortBy == ProductSortBy.Price)
+                            @if (Model.ListParameters.SortBy == ProductSortBy.Price)
                             {
                                 <div class="" style="@GetSortOrderIndicatorStyle()">&#9650;</div>
                             }
@@ -132,17 +159,17 @@
                                         <div>
                                             <label for="min-price" class="form-label">Min price:</label>
                                             <output for="min-price" id="min-price-output" aria-hidden="true"></output>
-                                            <input id="min-price" name="minPrice" type="range" value="@Model.MinPrice"
-                                                min="@Model.DefaultMinPrice" max="@Model.DefaultMaxPrice"
-                                                class="form-control">
+                                            <input id="min-price" name="minPrice" type="range"
+                                                value="@Model.ListParameters.MinPrice" min="@Model.DefaultMinPrice"
+                                                max="@Model.DefaultMaxPrice" class="form-control">
                                         </div>
 
                                         <div>
                                             <label for="max-price" class="form-label">Max price:</label>
                                             <output for="max-price" id="max-price-output" aria-hidden="true"></output>
-                                            <input id="max-price" name="maxPrice" type="range" value="@Model.MaxPrice"
-                                                min="@Model.DefaultMinPrice" max="@Model.DefaultMaxPrice"
-                                                class="form-control">
+                                            <input id="max-price" name="maxPrice" type="range"
+                                                value="@Model.ListParameters.MaxPrice" min="@Model.DefaultMinPrice"
+                                                max="@Model.DefaultMaxPrice" class="form-control">
                                         </div>
                                         <button class="btn btn-sm btn-outline-primary btn" type="submit">Apply</button>
                                     </div>
@@ -153,10 +180,16 @@
                     <th class="text-nowrap">
                         <div class="d-flex gap-2 align-items-center">
                             <a asp-route-sort="@nameof(Model.Product.OrderDate)"
-                                asp-route-order="@GetSortOrder(ProductSortBy.OrderDate)" class="text-body">
+                                asp-route-order="@GetSortOrder(ProductSortBy.OrderDate)"
+                                asp-route-limit="@Model.ListParameters.PageLimit"
+                                asp-route-minPrice="@Model.ListParameters.MinPrice"
+                                asp-route-maxPrice="@Model.ListParameters.MaxPrice"
+                                asp-route-minOrderDate="@Model.ListParameters.MinOrderDate"
+                                asp-route-maxOrderDate="@Model.ListParameters.MaxOrderDate"
+                                asp-route-categories="@Model.ListParameters.SelectedCategoryIds" class="text-body">
                                 @Html.DisplayNameFor(model => model.Product.OrderDate)
                             </a>
-                            @if (Model.SortBy == ProductSortBy.OrderDate)
+                            @if (Model.ListParameters.SortBy == ProductSortBy.OrderDate)
                             {
                                 <div class="" style="@GetSortOrderIndicatorStyle()">&#9650;</div>
                             }
@@ -170,13 +203,13 @@
                                     <div class="d-flex flex-column gap-3 p-2">
                                         <div class="form-group">
                                             <label for="min-order-date">From:</label>
-                                            <input id="min-order-date" name="minOrderDate" asp-for="MinOrderDate"
-                                                class="form-control" />
+                                            <input id="min-order-date" name="minOrderDate"
+                                                asp-for="ListParameters.MinOrderDate" class="form-control" />
                                         </div>
                                         <div class="form-group">
                                             <label for="max-order-date">To:</label>
-                                            <input id="max-order-date" name="maxOrderDate" asp-for="MaxOrderDate"
-                                                class="form-control" />
+                                            <input id="max-order-date" name="maxOrderDate"
+                                                asp-for="ListParameters.MaxOrderDate" class="form-control" />
                                         </div>
                                         <button class="btn btn-sm btn-outline-primary btn" type="submit">Apply</button>
                                     </div>
@@ -186,10 +219,16 @@
                     <th class="text-nowrap">
                         <div class="d-flex gap-2 align-items-center">
                             <a asp-route-sort="@nameof(Model.Product.Category)"
-                                asp-route-order="@GetSortOrder(ProductSortBy.Category)" class="text-body">
+                                asp-route-order="@GetSortOrder(ProductSortBy.Category)"
+                                asp-route-limit="@Model.ListParameters.PageLimit"
+                                asp-route-minPrice="@Model.ListParameters.MinPrice"
+                                asp-route-maxPrice="@Model.ListParameters.MaxPrice"
+                                asp-route-minOrderDate="@Model.ListParameters.MinOrderDate"
+                                asp-route-maxOrderDate="@Model.ListParameters.MaxOrderDate"
+                                asp-route-categories="@Model.ListParameters.SelectedCategoryIds" class="text-body">
                                 @nameof(Model.Product.Category)
                             </a>
-                            @if (Model.SortBy == ProductSortBy.Category)
+                            @if (Model.ListParameters.SortBy == ProductSortBy.Category)
                             {
                                 <div class="" style="@GetSortOrderIndicatorStyle()">&#9650;</div>
                             }
@@ -201,11 +240,11 @@
                                 </button>
                                 <div class="dropdown-menu p-0">
                                     <div class="d-flex flex-column gap-3 p-2">
-                                        <select size="@Model.Categories.Count" name="categories"
-                                            asp-for="SelectedCategoryIds" asp-items="Model.Categories"
+                                        <select size="@Model.CategorySelectItems.Count" name="categories"
+                                            asp-for="SelectedCategories" asp-items="Model.CategorySelectItems"
                                             class="form-select rounded-0" aria-label="Category select">
                                         </select>
-                                        <button class="btn btn-sm btn-outline-primary btn" type="submit">Apply</button>
+                                        <input class="btn btn-sm btn-outline-primary btn" type="submit" value="Apply" />
                                     </div>
                                 </div>
                             </div>
@@ -214,10 +253,16 @@
                     <th class="text-nowrap">
                         <div class="d-flex gap-2 align-items-center">
                             <a asp-route-sort="@nameof(Model.Product.Shelf)"
-                                asp-route-order="@GetSortOrder(ProductSortBy.Shelf)" class="text-body">
+                                asp-route-order="@GetSortOrder(ProductSortBy.Shelf)"
+                                asp-route-limit="@Model.ListParameters.PageLimit"
+                                asp-route-minPrice="@Model.ListParameters.MinPrice"
+                                asp-route-maxPrice="@Model.ListParameters.MaxPrice"
+                                asp-route-minOrderDate="@Model.ListParameters.MinOrderDate"
+                                asp-route-maxOrderDate="@Model.ListParameters.MaxOrderDate"
+                                asp-route-categories="@Model.ListParameters.SelectedCategoryIds" class="text-body">
                                 @nameof(Model.Product.Shelf)
                             </a>
-                            @if (Model.SortBy == ProductSortBy.Shelf)
+                            @if (Model.ListParameters.SortBy == ProductSortBy.Shelf)
                             {
                                 <div class="" style="@GetSortOrderIndicatorStyle()">&#9650;</div>
                             }
@@ -226,10 +271,16 @@
                     <th class="text-nowrap">
                         <div class="d-flex gap-2 align-items-center">
                             <a asp-route-sort="@nameof(Model.Product.Count)"
-                                asp-route-order="@GetSortOrder(ProductSortBy.Count)" class="text-body">
+                                asp-route-order="@GetSortOrder(ProductSortBy.Count)"
+                                asp-route-limit="@Model.ListParameters.PageLimit"
+                                asp-route-minPrice="@Model.ListParameters.MinPrice"
+                                asp-route-maxPrice="@Model.ListParameters.MaxPrice"
+                                asp-route-minOrderDate="@Model.ListParameters.MinOrderDate"
+                                asp-route-maxOrderDate="@Model.ListParameters.MaxOrderDate"
+                                asp-route-categories="@Model.ListParameters.SelectedCategoryIds" class="text-body">
                                 @nameof(Model.Product.Count)
                             </a>
-                            @if (Model.SortBy == ProductSortBy.Count)
+                            @if (Model.ListParameters.SortBy == ProductSortBy.Count)
                             {
                                 <div class="" style="@GetSortOrderIndicatorStyle()">&#9650;</div>
                             }
@@ -247,7 +298,7 @@
                 @foreach (var item in Model.Products)
                 {
                     <tr>
-                        <td class="text-truncate" style="max-width: 200px;">
+                        <td class="text-truncate ps-3" style="max-width: 300px;">
                             <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
                         </td>
                         <td class="text-nowrap">
@@ -277,10 +328,41 @@
             </tbody>
         </table>
     </div>
+    <div class="d-flex gap-2 p-3">
+        <div>Page @Model.ListParameters.CurrentPage of @Model.TotalPages</div>
+        @if (Model.ListParameters.CurrentPage > 1)
+        {
+            @* <a asp-action="Index"
+                asp-all-route-data="AddPageRouteData(Prev(Model.ListParameters.CurrentPage).ToString())">Previous</a> *@
+            <a asp-action="Index" asp-route-page="@Prev(Model.ListParameters.CurrentPage)"
+                asp-route-limit="@Model.ListParameters.PageLimit" asp-route-sort="@Model.ListParameters.SortBy"
+                asp-route-order="@Model.ListParameters.SortOrder" asp-route-minPrice="@Model.ListParameters.MinPrice"
+                asp-route-maxPrice="@Model.ListParameters.MaxPrice"
+                asp-route-minOrderDate="@Model.ListParameters.MinOrderDate"
+                asp-route-maxOrderDate="@Model.ListParameters.MaxOrderDate"
+                asp-route-categories="@Model.ListParameters.SelectedCategoryIds">Previous</a>
+            @* <input type="hidden" name="page" value="@Prev(Model.CurrentPage)" /> *@
+            @* <input type="submit" value="Previous" class="btn btn-link" asp-route-page="@Prev(Model.CurrentPage)" /> *@
+        }
+        @if (Model.ListParameters.CurrentPage < Model.TotalPages)
+        {
+            @* <a asp-action="Index"
+                asp-all-route-data="AddPageRouteData(Next(Model.ListParameters.CurrentPage).ToString())">Next</a> *@
+            <a asp-action="Index" asp-route-page="@Next(Model.ListParameters.CurrentPage)"
+                asp-route-limit="@Model.ListParameters.PageLimit" asp-route-sort="@Model.ListParameters.SortBy"
+                asp-route-order="@Model.ListParameters.SortOrder" asp-route-minPrice="@Model.ListParameters.MinPrice"
+                asp-route-maxPrice="@Model.ListParameters.MaxPrice"
+                asp-route-minOrderDate="@Model.ListParameters.MinOrderDate"
+                asp-route-maxOrderDate="@Model.ListParameters.MaxOrderDate"
+                asp-route-categories="@Model.ListParameters.SelectedCategoryIds">Next</a>
+            @* <input type="hidden" name="page" value="@Next(Model.CurrentPage)" /> *@
+            @* <input type="submit" value="Next" class="btn btn-link" asp-route-page="@Next(Model.CurrentPage)" /> *@
+        }
+    </div>
 </form>
 
 <script>
-    const formatCurrency = (value) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
+    const formatCurrency = (value) => new Intl.NumberFormat("@Model.CultureName", { style: "currency", currency: "@Model.IsoCurrencySymbol" }).format(value);
     const minPriceInput = document.getElementById("min-price");
     const minPriceOutput = document.getElementById("min-price-output");
     minPriceOutput.textContent = formatCurrency(minPriceInput.value);

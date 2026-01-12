@@ -10,7 +10,6 @@ namespace Storage.Models
 {
     public class ProductRepository : IProductRepository
     {
-        private IEnumerable<Product> _products { get; set; } = [];
         private readonly StorageContext _storageDbContext;
         private readonly ILogger<ProductRepository> _logger;
 
@@ -18,12 +17,6 @@ namespace Storage.Models
         {
             _storageDbContext = storageDbContext;
             _logger = logger;
-        }
-
-        private async Task<IEnumerable<Product>> GetAllProductsAsync()
-        {
-            _products = await _storageDbContext.Products.ToListAsync();
-            return _products;
         }
 
         public int AllProductsCount { get => _storageDbContext.Products.Count(); }
@@ -104,7 +97,7 @@ namespace Storage.Models
             DateTime? minOrderDate, 
             DateTime? maxOrderDate)
         {
-            var filteredProducts = await GetAllProductsAsync();
+            var filteredProducts = AllProducts;
 
             if (categoryFilter?.Count() > 0)
             {

@@ -14,8 +14,7 @@ namespace Storage.Core.Entities
         public int InventoryCount { get; set; }
         public string Shelf { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public  int CategoryId { get; set; }
-
+        public int CategoryId { get; set; }
         
         public Category Category { get; set; } = default!;
     }

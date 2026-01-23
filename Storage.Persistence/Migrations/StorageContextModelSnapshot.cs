@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Storage.Persistence.Data;
+using Storage.Infrastructure.Data;
 
 #nullable disable
 
-namespace Storage.Persistence.Migrations
+namespace Storage.Infrastructure.Migrations
 {
     [DbContext(typeof(StorageContext))]
     partial class StorageContextModelSnapshot : ModelSnapshot

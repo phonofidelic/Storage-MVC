@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Storage.Core.Entities;
 using Storage.Models.ViewModels;
-using Storage.Persistence.Data;
+using Storage.Infrastructure.Data;
 
 namespace Storage.Models
 {

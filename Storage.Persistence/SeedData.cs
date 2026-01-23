@@ -1,12 +1,12 @@
 ﻿using Bogus;
 using Microsoft.EntityFrameworkCore;
 using Storage.Core.Entities;
-using Storage.Persistence.Data;
+using Storage.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Storage.Persistence
+namespace Storage.Infrastructure
 {
     public class SeedData
     {

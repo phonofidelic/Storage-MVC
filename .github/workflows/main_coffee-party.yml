@@ -14,7 +14,7 @@ env:
   DOTNET_VERSION: '10.0.X'
   SOLUTION_PATH: 'Storage.slnx'
   MVC_PROJECT_PATH: 'Storage.Mvc/Storage.Mvc.csproj'
-  PUBLISH_DIR: './publish'
+  PUBLISH_DIR: 'Storage.Mvc/publish'
 
 jobs:
   build-and-test:

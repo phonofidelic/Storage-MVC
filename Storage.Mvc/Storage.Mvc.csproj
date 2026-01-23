@@ -47,7 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Storage.Persistence/Storage.Infrastructure.csproj" />
+    <ProjectReference Include="../Storage.Infrastructure/Storage.Infrastructure.csproj" />
     <ProjectReference Include="..\Storage.Core\Storage.Core.csproj" />
   </ItemGroup>
 

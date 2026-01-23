@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Storage.Persistence;
-using Storage.Persistence.Data;
+using Storage.Infrastructure;
+using Storage.Infrastructure.Data;
 
 namespace Storage.Extensions
 {

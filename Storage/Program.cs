@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Storage.Extensions;
 using Storage.Models;
 using Storage.Models.ViewModels;
-using Storage.Persistence.Data;
+using Storage.Infrastructure.Data;
 using Storage.Services;
 
 // Set system culture to sv-SE

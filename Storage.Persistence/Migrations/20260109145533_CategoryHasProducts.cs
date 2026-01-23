@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Storage.Persistence.Migrations
+namespace Storage.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class CategoryHasProducts : Migration

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Storage.Core.Entities;
 using Storage.Models.ViewModels;
-using Storage.Persistence.Data;
+using Storage.Infrastructure.Data;
 using Storage.Services;
 
 namespace Storage.Controllers

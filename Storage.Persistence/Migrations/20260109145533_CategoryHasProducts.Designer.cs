@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Storage.Persistence.Data;
+using Storage.Infrastructure.Data;
 
 #nullable disable
 
-namespace Storage.Persistence.Migrations
+namespace Storage.Infrastructure.Migrations
 {
     [DbContext(typeof(StorageContext))]
     [Migration("20260109145533_CategoryHasProducts")]

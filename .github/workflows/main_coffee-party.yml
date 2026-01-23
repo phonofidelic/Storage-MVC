@@ -10,7 +10,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: coffee-party-app
-  AZURE_WEBAPP_PACKAGE_PATH: './Storage.Mvc/publish' 
+  AZURE_WEBAPP_PACKAGE_PATH: 'Storage.Mvc/publish' 
   DOTNET_VERSION: '10.0.X'
   SOLUTION_PATH: 'Storage.slnx'
   MVC_PROJECT_PATH: 'Storage.Mvc/Storage.Mvc.csproj'

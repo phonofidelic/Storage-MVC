@@ -1,9 +1,5 @@
-using System;
-using Ivy;
-using Ivy.Shared;
-using Ivy.Views;
 using Storage.Core.Apps.Publishing;
-using Storage.Core.Connections;
+using Storage.Core.Apps.Publishing.products;
 
 namespace Storage.Internal.Apps.Publishing;
 
@@ -12,8 +8,9 @@ public class ProductsPublishingApp : ViewBase
 {
     public override async Task<object?> Build()
     {
-        var publishingService = UseService<IPublishingService>();
+        var publishingService = UseService<IProductsPublishingService>();
         var products = publishingService.AllProducts
+            .Include(p => p.Category)
             .Select(p => new ProductsPublishingListItem
             {
                 Id = p.Id,

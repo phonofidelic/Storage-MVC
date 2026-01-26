@@ -12,13 +12,20 @@ public class ProductsPublishingTable(IQueryable<ProductsPublishingListItem> prod
             .Clear()
             .Add(p => p.Name)
             .Add(p => p.Category)
-            .Header(p => p.Category, "Category")
             .Add(p => p.PurchasePrice)
-            .Header(p => p.PurchasePrice, "Purchase Price")
             .Add(p => p.Price)
-            .Header(p => p.Price, "Sales Price")
             .Add(p => p.OrderDate)
-            .Header(p => p.OrderDate, "Order Date")
-            .Add(p => p.Description);
+            .Add(p => p.Count)
+            .Header(p => p.Count, "Inv. Count")
+            .Add(p => p.Description)
+            .Order(
+                p => p.Name,
+                p => p.Category,
+                p => p.Price,
+                p => p.PurchasePrice,
+                p => p.OrderDate,
+                p => p.Count,
+                p => p.Description
+                );
     }
 }

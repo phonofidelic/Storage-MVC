@@ -61,7 +61,7 @@ public class ProductDetailsBlade(int productId) : ViewBase
                     Images = productValue.Images.Select(i => i.Src).ToList()
                 }
                 .ToDetails()
-                .MultiLine(e => e.Description ?? "")
+                .MultiLine(e => e.Description)
                 .RemoveEmpty()
                 .Builder(e => e.Id, e => e.CopyToClipboard()),
             footer: Layout.Horizontal().Gap(2).Align(Align.Right)

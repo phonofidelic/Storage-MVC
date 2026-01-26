@@ -32,8 +32,8 @@ public class ProductCreateDialog(IState<bool> isOpen, RefreshToken refreshToken)
 
         return product
             .ToForm()
-            .Builder(e => e.Price, e => e.ToMoneyInput().Currency("USD"))
-            .Builder(e => e.PurchasePrice, e => e.ToMoneyInput().Currency("USD"))
+            .Builder(e => e.Price, e => e.ToMoneyInput().Currency(RegionInfo.CurrentRegion.ISOCurrencySymbol))
+            .Builder(e => e.PurchasePrice, e => e.ToMoneyInput().Currency(RegionInfo.CurrentRegion.ISOCurrencySymbol))
             .Builder(e => e.CategoryId, e => e.ToAsyncSelectInput(UseCategorySearch, UseCategoryLookup, placeholder: "Select Category"))
             .HandleSubmit(OnSubmit)
             .ToDialog(isOpen, title: "Create Product", submitTitle: "Create");

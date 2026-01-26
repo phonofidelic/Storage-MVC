@@ -1,5 +1,5 @@
 ﻿using Storage.Core.Apps.Publishing.Categories;
-using Storage.Core.Apps.Publishing.products;
+using Storage.Core.Apps.Publishing.Products;
 using Storage.Core.Services;
 using Storage.Internal;
 using Storage.Internal.Apps.Publishing;

@@ -1,6 +1,6 @@
 using System;
 using Ivy.Connections;
-using Storage.Core.Apps.Publishing.products;
+using Storage.Core.Apps.Publishing.Products;
 
 namespace Storage.Core.Connections.StorageInternal;
 

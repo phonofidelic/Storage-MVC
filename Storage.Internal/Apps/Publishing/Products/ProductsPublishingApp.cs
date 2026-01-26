@@ -1,5 +1,5 @@
 using Storage.Core.Apps.Publishing;
-using Storage.Core.Apps.Publishing.products;
+using Storage.Core.Apps.Publishing.Products;
 
 namespace Storage.Internal.Apps.Publishing;
 

@@ -16,8 +16,12 @@ var chromeSettings = new ChromeSettings()
 var server = new Server();
 server.UseHotReload();
 server.AddAppsFromAssembly();
-// server.UseDefaultApp(typeof(Demo));
+server.AddConnectionsFromAssembly();
 server.UseChrome(() => new DefaultSidebarChrome(chromeSettings));
+
+var storageInternalConnection = new StorageInternalConnection();
+storageInternalConnection.RegisterServices(server.Services);
+server.Services.AddScoped<IPublishingService, PublishingService>();
 
 await server.RunAsync();
 

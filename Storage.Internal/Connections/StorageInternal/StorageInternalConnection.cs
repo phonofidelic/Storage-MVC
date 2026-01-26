@@ -18,7 +18,7 @@ public class StorageInternalConnection : IConnection, IHaveSecrets
 
     public string GetName() => nameof(StorageInternal);
 
-    public string GetNamespace() => typeof(StorageInternalConnection).Namespace;
+    public string GetNamespace() => typeof(StorageInternalConnection).Namespace ?? throw new Exception("Could not read namespace");
 
     public string GetConnectionType() => "EntityFramework.SqlServer";
 

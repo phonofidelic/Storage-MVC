@@ -313,7 +313,7 @@ namespace Storage.Controllers
                         OrderDate: productEditViewModel.OrderDate,
                         CategoryId: productEditViewModel.CategoryId,
                         Shelf: productEditViewModel.Shelf,
-                        InventoryCount: productEditViewModel.Count,
+                        InventoryCount: productEditViewModel.InventoryCount,
                         Description: productEditViewModel.Description
                         // image
                     );

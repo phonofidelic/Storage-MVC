@@ -20,7 +20,7 @@ namespace Storage.Extensions
                 {
                     await SeedData.InitAsync(context);
                 }
-                catch (Exception ex) {
+                catch {
                     throw;
                 }
             }

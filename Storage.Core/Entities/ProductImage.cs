@@ -9,7 +9,7 @@ namespace Storage.Core.Entities
         public int ImageId { get; set; }
         public int ProductId { get; set; }
 
-        public Image Image { get; set; }
-        public Product Product { get; set; }
+        public required Image Image { get; set; }
+        public required Product Product { get; set; }
     }
 }

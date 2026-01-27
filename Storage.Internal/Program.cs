@@ -1,4 +1,5 @@
-﻿using Storage.Core.Apps.Publishing.Categories;
+﻿using Storage.Core.Apps.Publishing;
+using Storage.Core.Apps.Publishing.Categories;
 using Storage.Core.Apps.Publishing.Products;
 using Storage.Core.Services;
 using Storage.Internal;
@@ -21,6 +22,7 @@ server.UseChrome(() => new DefaultSidebarChrome(chromeSettings));
 
 var storageInternalConnection = new StorageInternalConnection();
 storageInternalConnection.RegisterServices(server.Services);
+server.Services.AddScoped<IPublishingRepository, PublishingRepository>();
 server.Services.AddScoped<IProductsPublishingService, ProductsPublishingService>();
 server.Services.AddScoped<ICategoriesPublishingService, CategoriesPublishingService>();
 

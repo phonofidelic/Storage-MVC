@@ -1,3 +1,7 @@
+using Storage.Core.Apps.Publishing;
+using Storage.Models;
+using Storage.Models.ViewModels;
+
 namespace Storage.Core.Apps.Views;
 
 public class ProductEditSheet(IState<bool> isOpen, int productId) : ViewBase
@@ -6,13 +10,27 @@ public class ProductEditSheet(IState<bool> isOpen, int productId) : ViewBase
     {
         var factory = UseService<StorageInternalContextFactory>();
         var queryService = UseService<IQueryService>();
+        var publishingRepository = UseService<IPublishingRepository>();
 
         var productQuery = UseQuery(
-            key: (typeof(Product), productId),
+            key: (typeof(ProductEditViewModel), productId),
             fetcher: async ct =>
             {
                 await using var db = factory.CreateDbContext();
-                return await db.Products.FirstAsync(e => e.Id == productId, ct);
+                var queryResult = await db.Products.FirstAsync(e => e.Id == productId, ct);
+                
+                return new ProductEditViewModel
+                {
+                    Id = queryResult.Id,
+                    Name = queryResult.Name,
+                    Price = queryResult.Price,
+                    PurchasePrice = queryResult.PurchasePrice,
+                    InventoryCount = queryResult.InventoryCount,
+                    OrderDate = queryResult.OrderDate,
+                    Shelf = queryResult.Shelf,
+                    CategoryId = queryResult.CategoryId,
+                    Description = queryResult.Description ?? ""
+                };
             },
             tags: [(typeof(Product), productId)]
         );
@@ -29,17 +47,28 @@ public class ProductEditSheet(IState<bool> isOpen, int productId) : ViewBase
             .Builder(e => e.Shelf, e => e.ToTextInput())
             .Builder(e => e.Description, e => e.ToTextAreaInput())
             .Builder(e => e.CategoryId, e => e.ToAsyncSelectInput(UseCategorySearch, UseCategoryLookup, placeholder: "Select Category"))
-            .Remove(e => e.Id, e => e.CreatedAt, e => e.UpdatedAt)
+            .Remove(e => e.Id)
             .HandleSubmit(OnSubmit)
             .ToSheet(isOpen, "Edit Product");
 
-        async Task OnSubmit(Product? request)
+        async Task OnSubmit(ProductEditViewModel? request)
         {
             if (request == null) return;
-            await using var db = factory.CreateDbContext();
-            request.UpdatedAt = DateTime.UtcNow;
-            db.Products.Update(request);
-            await db.SaveChangesAsync();
+
+            ProductEditDto productEditDto = new 
+            (
+                Id: request.Id,
+                Name: request.Name,
+                Price: request.Price,
+                PurchasePrice: request.PurchasePrice,
+                OrderDate: request.OrderDate,
+                CategoryId: request.CategoryId,
+                Shelf: request.Shelf,
+                InventoryCount: request.InventoryCount,
+                Description: request.Description
+            );
+
+            await publishingRepository.EditProductAsync(productEditDto);
             queryService.RevalidateByTag((typeof(Product), productId));
         }
     }

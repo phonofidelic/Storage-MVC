@@ -14,6 +14,10 @@ var chromeSettings = new ChromeSettings()
     .DefaultApp<ProductsPublishingApp>()
     .UseTabs(preventDuplicates: true);
 
+CultureInfo systemCulture = new("sv-SE");
+CultureInfo.DefaultThreadCurrentCulture = systemCulture;
+CultureInfo.DefaultThreadCurrentUICulture = systemCulture;
+
 var server = new Server();
 server.UseHotReload();
 server.AddAppsFromAssembly();

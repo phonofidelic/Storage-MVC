@@ -1,6 +1,7 @@
 ﻿using Storage.Core.Apps.Publishing;
 using Storage.Core.Apps.Publishing.Categories;
 using Storage.Core.Apps.Publishing.Products;
+using Storage.Core.Apps.Publishing.Products.Components;
 using Storage.Core.Services;
 using Storage.Internal;
 using Storage.Internal.Apps.Publishing;
@@ -18,7 +19,13 @@ CultureInfo systemCulture = new("sv-SE");
 CultureInfo.DefaultThreadCurrentCulture = systemCulture;
 CultureInfo.DefaultThreadCurrentUICulture = systemCulture;
 
-var server = new Server();
+var builder = new ContentBuilder();
+builder
+    .Use(new StockStatusContentBuilder())
+    .Use(new DefaultContentBuilder());
+
+var server = new Server()
+    .UseContentBuilder(builder);
 server.UseHotReload();
 server.AddAppsFromAssembly();
 server.AddConnectionsFromAssembly();

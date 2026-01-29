@@ -1,3 +1,6 @@
+using Storage.Core.Apps.Publishing.Products.Components;
+using Storage.Core.Apps.Publishing.Products.Views;
+
 namespace Storage.Core.Apps.Views;
 
 public class ProductDetailsBlade(int productId) : ViewBase
@@ -48,7 +51,7 @@ public class ProductDetailsBlade(int productId) : ViewBase
             .ToTrigger((isOpen) => new ProductEditSheet(isOpen, productId));
 
         var detailsCard = new Card(
-            content: new
+            content: new ProductDetailsViewModel
                 {
                     Id = productValue.Id,
                     Name = productValue.Name,
@@ -56,9 +59,9 @@ public class ProductDetailsBlade(int productId) : ViewBase
                     PurchasePrice = productValue.PurchasePrice,
                     InventoryCount = productValue.InventoryCount,
                     Shelf = productValue.Shelf,
-                    Category = productValue.Category.Name,
-                    Description = productValue.Description,
-                    Images = productValue.Images.Select(i => i.Src).ToList()
+                    CategoryName = productValue.Category.Name,
+                    Description = productValue.Description ?? string.Empty,
+                    Images = productValue.Images
                 }
                 .ToDetails()
                 .MultiLine(e => e.Description)

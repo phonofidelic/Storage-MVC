@@ -50,7 +50,7 @@ public class ProductListBlade : ViewBase
                 [
                     Layout.Horizontal().Gap(2)
                         | Text.Block(product.Price.ToString("{0:C1}"))
-                        | new StockStatusBadge(product.InventoryCount)
+                        | new StockStatusBadge(product.StockInfo)
                 ]
             );
         });

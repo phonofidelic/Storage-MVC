@@ -29,7 +29,6 @@
 
   <ItemGroup>
     <Folder Include="Apps/Publishing/Products/Components/" />
-    <Folder Include="Apps/Publishing/Products/ViewModels/" />
   </ItemGroup>
 
 </Project>

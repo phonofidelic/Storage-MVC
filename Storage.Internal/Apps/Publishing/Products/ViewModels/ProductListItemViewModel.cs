@@ -12,6 +12,8 @@ public class ProductListItemViewModel
 
     public int InventoryCount { get; set; }
 
+    public StockInfo StockInfo { get => new(InventoryCount); }
+
     public decimal Price { get; set; }
 }
 

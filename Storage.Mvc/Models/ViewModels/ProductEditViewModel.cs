@@ -33,12 +33,11 @@ namespace Storage.Models.ViewModels
 
         public string Shelf { get; set; } = default!;
 
-        [Required]
         [Range(0, int.MaxValue, ErrorMessage = "{0} must be a number between {2} and {1}")]
-        public int Count { get; set; }
+        public int InventoryCount { get; set; }
 
         [StringLength(200)]
-        public string? Description { get; set; } = string.Empty;
+        public string? Description { get; set; }
 
         public ImageInputViewModel? Image { get; set; }
 

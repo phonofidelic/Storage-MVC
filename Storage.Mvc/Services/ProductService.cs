@@ -62,7 +62,7 @@ namespace Storage.Services
                 // Category = product.Category,
                 CategoryId = product.CategoryId,
                 Shelf = product.Shelf,
-                Count = product.InventoryCount,
+                InventoryCount = product.InventoryCount,
                 Description = product.Description,
                 //Image = MapImageInputViewModel(product.Image),
                 CategorySelectItems = categorySelectItems,

@@ -10,13 +10,11 @@ namespace Storage.Infrastructure
 {
     public class SeedData
     {
-        private static Faker faker;
+        private static readonly Faker faker = new();
 
         public static async Task InitAsync(StorageContext context)
         {
             if (await context.Products.AnyAsync()) return;
-
-            faker = new();
 
             IEnumerable<Category> categories = GenerateCategories(5);
             await context.AddRangeAsync(categories);

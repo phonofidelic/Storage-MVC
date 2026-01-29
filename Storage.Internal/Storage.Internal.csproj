@@ -27,4 +27,9 @@
     <ProjectReference Include="../Storage.Mvc/Storage.Mvc.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Apps/Publishing/Products/Components/" />
+    <Folder Include="Apps/Publishing/Products/ViewModels/" />
+  </ItemGroup>
+
 </Project>

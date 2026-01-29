@@ -43,7 +43,7 @@ public class ProductEditSheet(IState<bool> isOpen, int productId) : ViewBase
             .Builder(e => e.Name, e => e.ToTextInput())
             .Builder(e => e.Price, e => e.ToMoneyInput().Currency(RegionInfo.CurrentRegion.ISOCurrencySymbol))
             .Builder(e => e.PurchasePrice, e => e.ToMoneyInput().Currency(RegionInfo.CurrentRegion.ISOCurrencySymbol))
-            .Builder(e => e.InventoryCount, e => e.ToNumberInput())
+            .Builder(e => e.InventoryCount, e => e.ToReadOnlyInput())
             .Builder(e => e.Shelf, e => e.ToTextInput())
             .Builder(e => e.Description, e => e.ToTextAreaInput())
             .Builder(e => e.CategoryId, e => e.ToAsyncSelectInput(UseCategorySearch, UseCategoryLookup, placeholder: "Select Category"))
